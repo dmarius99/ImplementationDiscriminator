@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <!--<import resource="classpath*:discriminator-context.xml" />-->
+
+    <!--<context:annotation-config/>-->
+    <!--<context:component-scan base-package="any.mytestproject"/>-->
+    <!--<aop:config/>-->
+    <!--<aop:aspectj-autoproxy />-->
+
+    <!--<aop:scoped-proxy />-->
+    <!--<bean id="implOne" class="any.mytestproject.ImplOne"/>-->
+    <!--<bean id="implTwo" class="any.mytestproject.ImplTwo"/>-->
+
+    <!--<util:map id="implementations" map-class="java.util.HashMap"-->
+              <!--key-type="java.lang.String"-->
+              <!--value-type="any.mytestproject.CommonInterface">-->
+        <!--<entry key="1" value-ref="implOne" />-->
+        <!--<entry key="2" value-ref="implTwo" />-->
+    <!--</util:map>-->
+
+    <!--<bean id="exampleDiscriminator"-->
+          <!--class="any.mytestproject.ExampleDiscriminatorImplementation">-->
+        <!--<constructor-arg index="0" ref="implOne"/>-->
+        <!--<constructor-arg index="1" ref="implementations"/>-->
+    <!--</bean>-->
+    <context:annotation-config/>
+    <context:component-scan base-package="com.dms;any.mytestproject"/>
+    <!--<context:component-scan base-package="any.mytestproject"/>-->
+
+</beans>
