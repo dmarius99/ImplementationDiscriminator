@@ -77,4 +77,11 @@ public class Example2Test {
         LOG.info("Duration: "+(t2-t1)+" millis");
     }
 
+    @Test
+    public void testNotInterceptedOverriddenMethods() {
+        String name1 = commonInterface.getText1(new WrappedParam(1L, "name aaaa 1"), 1);
+        assertEquals(name1, ImplThree.MSG);
+        String name2 = commonInterface.getText1(new WrappedParam(1001L, "name2"), 2);
+        assertEquals(name2, ImplThree.MSG);
+    }
 }

@@ -5,6 +5,7 @@ import any.WrappedParam;
 import com.dms.DiscriminatorImplementation;
 
 import javax.inject.Named;
+import java.util.Set;
 
 /**
  * Created by Marius on 27/09/14.
@@ -21,4 +22,19 @@ public class DiscriminatorExampleAggregated extends DiscriminatorImplementation<
         }
     }
 
+    @Override
+    public Set<String> getInterceptedMethods() {
+        Set<String> interceptedMethods = super.getInterceptedMethods();
+        interceptedMethods.remove("show");
+        interceptedMethods.remove("getText1");
+        return interceptedMethods;
+    }
+
+    @Override
+    public Set<String> getUnInterceptedMethods() {
+        Set<String> unInterceptedMethods = super.getUnInterceptedMethods();
+        unInterceptedMethods.add("show");
+        unInterceptedMethods.add("getText1");
+        return unInterceptedMethods;
+    }
 }
