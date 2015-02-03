@@ -11,7 +11,7 @@ import java.util.Collection;
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
  *
  * @param <DiscriminatorType> the wrapper type to discriminate on
- * @param <InterfaceType> the interface for all implementations
+ * @param <InterfaceType>     the interface for all implementations
  */
 public abstract class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
         extends DiscriminatorInitializer<DiscriminatorType, InterfaceType> {

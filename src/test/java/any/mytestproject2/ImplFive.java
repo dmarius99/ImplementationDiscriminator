@@ -34,8 +34,8 @@ public class ImplFive implements CommonInterface {
     public List<String> getList(WrappedParam param1) {
         System.out.println(MSG);
         List<String> myList = new ArrayList<String>();
-        myList.add(MSG+"-1");
-        myList.add(MSG+"-11");
+        myList.add(MSG + "-1");
+        myList.add(MSG + "-11");
         return myList;
     }
 

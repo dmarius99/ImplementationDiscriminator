@@ -50,7 +50,8 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
                         this.defaultImplementation = getImplementationBean(bean);
                     } else {
                         throw new IllegalArgumentException(
-                                "Duplicate " + DiscriminatorInterface.ANNOTATION_NAME + "." + DiscriminatorInterface.IS_DEFAULT + " annotation usage");
+                                "Duplicate " + DiscriminatorInterface.ANNOTATION_NAME + "." +
+                                        DiscriminatorInterface.IS_DEFAULT + " annotation usage");
                     }
                     this.resultAggregated = getIsResultAggregated(bean);
                 }
@@ -74,7 +75,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     }
 
     @Override
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings({"unchecked"})
     public <InterfaceType> InterfaceType getTargetObject(InterfaceType proxy) {
         if (AopUtils.isJdkDynamicProxy(proxy)) {
             try {

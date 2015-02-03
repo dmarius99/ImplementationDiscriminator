@@ -13,6 +13,7 @@ interface DiscriminatorInterface<DiscriminatorType, InterfaceType> extends Discr
     static final String ANNOTATION_NAME = "@Discriminator";
     static final String IS_DEFAULT = "isDefault";
     static final String IS_RESULT_AGGREGATED = "isResultAggregated";
+    static final String DISCRIMINATE_EXECUTION_POINT = "discriminateExecutionPoint";
     static final String BASE_PACKAGE = "com.dms";
 
     /**

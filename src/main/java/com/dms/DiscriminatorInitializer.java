@@ -6,14 +6,14 @@ import javax.inject.Named;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * DiscriminatorInitializer, 24.10.2014
  * <p/>
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
  */
-abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extends MethodsHelper implements DiscriminatorInterface<DiscriminatorType, InterfaceType> {
+abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extends MethodsHelper
+        implements DiscriminatorInterface<DiscriminatorType, InterfaceType> {
 
     @Inject
     @Named("beanManager")
@@ -40,16 +40,6 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
         if (getImplementations() == null || getImplementations().size() == 0) {
             throwError(new IllegalStateException("No implementations specified"));
         }
-    }
-
-    /**
-     * Throws an RuntimeException.
-     *
-     * @param t Exception
-     */
-    void throwError(Throwable t) {
-        LOG.log(Level.SEVERE, "Critical error in DiscriminatorImplementation: ", t);
-        throw new RuntimeException("Critical error in DiscriminatorImplementation: ", t);
     }
 
     /**

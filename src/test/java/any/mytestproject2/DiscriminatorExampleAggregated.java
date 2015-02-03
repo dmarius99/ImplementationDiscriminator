@@ -15,7 +15,7 @@ public class DiscriminatorExampleAggregated extends DiscriminatorImplementation<
 
     @Override
     public CommonInterface getImplementationForDiscriminator(WrappedParam parameter) {
-        if (parameter.getId()<1000) {
+        if (parameter.getId() < 1000) {
             return getImplementations().get(ImplThree.class.getName());
         } else {
             return getImplementations().get(ImplFour.class.getName());

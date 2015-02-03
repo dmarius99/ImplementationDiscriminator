@@ -20,7 +20,7 @@ public class ImplTwo implements CommonInterface {
     public static final String MSG = "Show message from ImplTwo... 222";
 
     public void show(WrappedParam param1) {
-       System.out.println(MSG);
+        System.out.println(MSG);
     }
 
     public String getText1(WrappedParam param1, Integer p2) {
@@ -36,8 +36,8 @@ public class ImplTwo implements CommonInterface {
     public List<String> getList(WrappedParam param1) {
         System.out.println(MSG);
         List<String> myList = new ArrayList<String>();
-        myList.add(MSG+"-2");
-        myList.add(MSG+"-22");
+        myList.add(MSG + "-2");
+        myList.add(MSG + "-22");
         return myList;
     }
 

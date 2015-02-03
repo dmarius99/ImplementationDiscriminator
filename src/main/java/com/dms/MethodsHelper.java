@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -51,6 +52,7 @@ class MethodsHelper {
     }
 
     MethodsHelper() {
+        LOG.info("Loading methods...");
     }
 
     Class getDiscriminatorClass() {
@@ -86,13 +88,7 @@ class MethodsHelper {
     }
 
     public Set<String> getAggregatedMethods() {
-        if (aggregatedMethods == null) {
-            aggregatedMethods = new HashSet<String>();
-            for (Method method : methodsToBeAggregated) {
-                aggregatedMethods.add(method.getName());
-            }
-        }
-        return aggregatedMethods;
+        return getMethods(aggregatedMethods, methodsToBeAggregated);
     }
 
     public void setAggregatedMethods(Set<String> aggregatedMethods) {
@@ -100,17 +96,31 @@ class MethodsHelper {
     }
 
     public Set<String> getUnInterceptedMethods() {
-        if (unInterceptedMethods == null) {
-            unInterceptedMethods = new HashSet<String>();
-            for (Method method : methodsNotToBeIntercepted) {
-                unInterceptedMethods.add(method.getName());
-            }
-        }
-        return unInterceptedMethods;
+        return getMethods(unInterceptedMethods, methodsNotToBeIntercepted);
     }
 
     public void setUnInterceptedMethods(Set<String> unInterceptedMethods) {
         this.unInterceptedMethods = unInterceptedMethods;
+    }
+
+    public Set<String> getInterceptedMethods() {
+        return getMethods(interceptedMethods, methodsNotToBeIntercepted);
+    }
+
+    public void setInterceptedMethods(Set<String> interceptedMethods) {
+        this.interceptedMethods = interceptedMethods;
+    }
+
+    public Set<String> getMethods(Set<String> methodsAsStrings, Set<Method> methodsAsObjects) {
+        if (methodsAsStrings == null) {
+            methodsAsStrings = new HashSet<String>();
+            for (Method method : methodsAsObjects) {
+                if (!methodsAsStrings.add(method.getName())) {
+                    throwMethodsNotUnique(method.getName());
+                }
+            }
+        }
+        return methodsAsStrings;
     }
 
     /**
@@ -151,7 +161,7 @@ class MethodsHelper {
         return isIntercepted;
     }
 
-    @SuppressWarnings( { "unchecked" } )
+    @SuppressWarnings({"unchecked"})
     private boolean shouldMethodBeAggregated(Method method) {
         return Collection.class.isAssignableFrom(method.getReturnType());
     }
@@ -161,6 +171,9 @@ class MethodsHelper {
      */
     void init() {
         initMethodsByRole();
+        setInterceptedMethods(getMethods(interceptedMethods, methodsToBeIntercepted));
+        setUnInterceptedMethods(getMethods(unInterceptedMethods, methodsNotToBeIntercepted));
+        setAggregatedMethods(getMethods(aggregatedMethods, methodsToBeAggregated));
         logInitialization();
     }
 
@@ -183,17 +196,17 @@ class MethodsHelper {
         LOG.info("******************************************");
     }
 
-    public Set<String> getInterceptedMethods() {
-        if (interceptedMethods == null) {
-            interceptedMethods = new HashSet<String>();
-            for (Method method : methodsToBeIntercepted) {
-                interceptedMethods.add(method.getName());
-            }
-        }
-        return interceptedMethods;
+    /**
+     * Throws an RuntimeException.
+     *
+     * @param t Exception
+     */
+    void throwError(Throwable t) {
+        LOG.log(Level.SEVERE, "Critical error in DiscriminatorImplementation: ", t);
+        throw new RuntimeException("Critical error in DiscriminatorImplementation: ", t);
     }
 
-    public void setInterceptedMethods(Set<String> interceptedMethods) {
-        this.interceptedMethods = interceptedMethods;
+    private void throwMethodsNotUnique(String methodName) {
+        throw new RuntimeException("Method name not unique: " + methodName);
     }
 }

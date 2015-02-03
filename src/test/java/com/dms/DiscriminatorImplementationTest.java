@@ -16,8 +16,6 @@ import static org.mockito.Mockito.*;
  */
 public class DiscriminatorImplementationTest {
 
-    public static final String DISCRIMINATE_EXECUTION_POINT = "discriminateExecutionPoint";
-
     @Test
     public void testDefaultIntercept() throws Throwable {
         DiscriminatorExampleForNumbers discriminatorImplementation = new DiscriminatorExampleForNumbers();
@@ -32,7 +30,9 @@ public class DiscriminatorImplementationTest {
         Object result1 = discriminatorImplementation.defaultIntercept(proceedingJoinPoint);
         verify(proceedingJoinPoint).proceed();
 
-        Method method = DiscriminatorImplementation.class.getDeclaredMethod(DISCRIMINATE_EXECUTION_POINT, ProceedingJoinPoint.class);
+        Method method = DiscriminatorImplementation.class.getDeclaredMethod(
+                DiscriminatorInterface.DISCRIMINATE_EXECUTION_POINT,
+                ProceedingJoinPoint.class);
         method.setAccessible(true);
         Object result2 = method.invoke(discriminatorImplementation, proceedingJoinPoint);
         verify(proceedingJoinPoint, new Times(2)).proceed();
