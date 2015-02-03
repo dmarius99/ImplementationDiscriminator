@@ -31,18 +31,21 @@ public class DiscriminatorInitializerTest {
 
         when(mockDiscriminator.getBeanManager()).thenReturn(mockBeanManagerForSpring);
         when(mockBeanManagerForSpring.getImplementationBeans()).thenReturn(implementations);
-        when(mockBeanManagerForSpring.getDefaultImplementationBean()).thenReturn(defaultImpl);
     }
 
     @Test
     public void testInitDependenciesWithOneImplementationNotAggregated() throws Exception {
         assertEquals(discriminatorInitializer.getInterfaceClass(), Comparable.class);
         assertEquals(discriminatorInitializer.getDiscriminatorClass(), Number.class);
-        String beanClassName = discriminatorInitializer.getDefaultImplementation().getClass().getName();
-        assertEquals(FloatMath.class.getName(), beanClassName);
         assertEquals(discriminatorInitializer.getImplementations().size(), 1);
         assertTrue(discriminatorInitializer.isActive());
         assertFalse(discriminatorInitializer.isResultAggregated());
+    }
+
+    @Test
+    public void testImplementationClassName() throws Exception {
+        String beanClassName = discriminatorInitializer.getImplementations().keySet().toArray()[0].toString();
+        assertEquals(FloatMath.class.getName(), beanClassName);
     }
 
     @Test

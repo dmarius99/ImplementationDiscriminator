@@ -31,9 +31,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     @Inject
     private ApplicationContext applicationContext;
 
-    private boolean resultAggregated;
-
-    private InterfaceType defaultImplementation;
+    private boolean resultAggregated = false;
 
     private Map<String, InterfaceType> implementations = new HashMap<String, InterfaceType>();
 
@@ -43,17 +41,8 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         for (BeanDefinition bean : scannedImplementations) {
             if (isBeanAvailable(bean)) {
                 implementations.put(bean.getBeanClassName(), getImplementationBean(bean));
-                boolean isDefault = getIsDefault(bean);
-
-                if (isDefault) {
-                    if (getDefaultImplementationBean() == null) {
-                        this.defaultImplementation = getImplementationBean(bean);
-                    } else {
-                        throw new IllegalArgumentException(
-                                "Duplicate " + DiscriminatorInterface.ANNOTATION_NAME + "." +
-                                        DiscriminatorInterface.IS_DEFAULT + " annotation usage");
-                    }
-                    this.resultAggregated = getIsResultAggregated(bean);
+                if (!resultAggregated) {
+                    resultAggregated = getIsResultAggregated(bean);
                 }
             }
         }
@@ -62,11 +51,6 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     @Override
     public Map<String, InterfaceType> getImplementationBeans() {
         return implementations;
-    }
-
-    @Override
-    public InterfaceType getDefaultImplementationBean() {
-        return defaultImplementation;
     }
 
     @Override
@@ -108,10 +92,6 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
 
     private Boolean getIsResultAggregated(BeanDefinition beanDefinition) {
         return getAnnotationAttribute(beanDefinition, Discriminator.class, DiscriminatorInterface.IS_RESULT_AGGREGATED);
-    }
-
-    private Boolean getIsDefault(BeanDefinition beanDefinition) {
-        return getAnnotationAttribute(beanDefinition, Discriminator.class, DiscriminatorInterface.IS_DEFAULT);
     }
 
     private Boolean getAnnotationAttribute(BeanDefinition beanDefinition, Class clazz, String attribute) {

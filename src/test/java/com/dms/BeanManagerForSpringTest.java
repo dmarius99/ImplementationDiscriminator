@@ -23,7 +23,6 @@ public class BeanManagerForSpringTest {
     @Test
     public void testInitDependencies() throws Exception {
         beanManagerForSpring.initDependencies();
-        assertNull(beanManagerForSpring.getDefaultImplementationBean());
         assertEquals(beanManagerForSpring.getImplementationBeans().size(), 0);
     }
 
@@ -31,11 +30,6 @@ public class BeanManagerForSpringTest {
     public void testGetImplementationBeans() throws Exception {
         beanManagerForSpring.getImplementationBeans().put("1", new Object());
         assertEquals(beanManagerForSpring.getImplementationBeans().size(), 1);
-    }
-
-    @Test
-    public void testGetDefaultImplementationBean() throws Exception {
-        assertNull(beanManagerForSpring.getDefaultImplementationBean());
     }
 
     @Test

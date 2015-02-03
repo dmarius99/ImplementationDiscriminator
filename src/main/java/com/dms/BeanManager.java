@@ -9,8 +9,6 @@ interface BeanManager {
 
     <InterfaceType> Map<String, InterfaceType> getImplementationBeans();
 
-    <InterfaceType> InterfaceType getDefaultImplementationBean();
-
     <InterfaceType> InterfaceType getTargetObject(InterfaceType proxy);
 
     boolean isResultAggregated();

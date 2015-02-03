@@ -34,9 +34,6 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
     @PostConstruct
     protected void validate() {
         LOG.info("Validating @Discriminator usage");
-        if (getDefaultImplementation() == null) {
-            throwError(new IllegalStateException("No default implementation specified"));
-        }
         if (getImplementations() == null || getImplementations().size() == 0) {
             throwError(new IllegalStateException("No implementations specified"));
         }
@@ -57,10 +54,6 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
             throwError(new RuntimeException("Wrong proxy configuration or usage for Parametrized types"));
         }
         return null;
-    }
-
-    InterfaceType getDefaultImplementation() {
-        return (InterfaceType) getBeanManager().getDefaultImplementationBean();
     }
 
     @Override
