@@ -33,7 +33,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
 
     private boolean resultAggregated = false;
 
-    private Map<String, InterfaceType> implementations = new HashMap<String, InterfaceType>();
+    private final Map<String, InterfaceType> implementations = new HashMap<String, InterfaceType>();
 
     @PostConstruct
     void initDependencies() {
