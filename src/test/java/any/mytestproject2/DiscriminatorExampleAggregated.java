@@ -37,4 +37,10 @@ public class DiscriminatorExampleAggregated extends DiscriminatorImplementation<
         unInterceptedMethods.add("getText1");
         return unInterceptedMethods;
     }
+
+    @Override
+    public Set<String> getAggregatedMethods() {
+        return super.getAggregatedMethods();
+    }
+
 }

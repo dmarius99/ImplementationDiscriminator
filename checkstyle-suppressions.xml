@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN" "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+<suppressions>
+
+    <!-- suppress certain checks on all files -->
+    <suppress files="." checks="FinalParameters"/>
+    <suppress files="." checks="JavadocVariable"/>
+    <suppress files="." checks="JavadocMethod"/>
+    <!--<suppress files="." checks="HiddenField"/>-->
+
+    <!--<module name="FinalParameters"/>-->
+    <!-- 43 -->
+    <!--<module name="JavadocVariable"/>-->
+    <!-- 18 -->
+    <!--<module name="JavadocMethod"/>-->
+    <!-- 54 -->
+    <!--<module name="HiddenField"/>-->
+    <!-- 10 -->
+
+</suppressions>

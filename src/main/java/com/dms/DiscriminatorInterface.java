@@ -4,17 +4,23 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 /**
  * DiscriminatorInterface, 23.10.2014
- * <p/>
+ *
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
  */
 
-interface DiscriminatorInterface<DiscriminatorType, InterfaceType> extends Discriminate<DiscriminatorType, InterfaceType> {
+/**
+ *
+ * @param <DiscriminatorType> the class type of the parameter used in choosing the implementation
+ * @param <InterfaceType> the class type of the interface implemented by the implementation beans
+ */
+interface DiscriminatorInterface<DiscriminatorType, InterfaceType>
+        extends Discriminate<DiscriminatorType, InterfaceType> {
 
-    static final String ANNOTATION_NAME = "@Discriminator";
-    static final String IS_DEFAULT = "isDefault";
-    static final String IS_RESULT_AGGREGATED = "isResultAggregated";
-    static final String DISCRIMINATE_EXECUTION_POINT = "discriminateExecutionPoint";
-    static final String BASE_PACKAGE = "com.dms";
+    String ANNOTATION_NAME = "@Discriminator";
+    String IS_DEFAULT = "isDefault";
+    String IS_RESULT_AGGREGATED = "isResultAggregated";
+    String DISCRIMINATE_EXECUTION_POINT = "discriminateExecutionPoint";
+    String BASE_PACKAGE = "com.dms";
 
     /**
      * @param joinPoint the ProceedingJoinPoint

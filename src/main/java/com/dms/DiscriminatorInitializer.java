@@ -9,8 +9,14 @@ import java.util.Map;
 
 /**
  * DiscriminatorInitializer, 24.10.2014
- * <p/>
+ *
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
+ */
+
+/**
+ *
+ * @param <DiscriminatorType> the class type of the parameter used in choosing the implementation
+ * @param <InterfaceType> the class type of the interface implemented by the implementation beans
  */
 abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extends MethodsHelper
         implements DiscriminatorInterface<DiscriminatorType, InterfaceType> {
@@ -29,11 +35,11 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
     }
 
     /**
-     * Validates this bean instance in run time by checking that the required fields are not null
+     * Validates this bean instance in run time by checking that the required fields are not null.
      */
     @PostConstruct
     protected void validate() {
-        LOG.info("Validating @Discriminator usage");
+        LOG.info("Validating " + ANNOTATION_NAME + " usage");
         if (getImplementations() == null || getImplementations().size() == 0) {
             throwError(new IllegalStateException("No implementations specified"));
         }
@@ -43,7 +49,7 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
      * @param typeArgumentIndex the argument position
      * @return the argument class type
      */
-    private Class getTypeArgumentClass(int typeArgumentIndex) throws ClassCastException {
+    private Class getTypeArgumentClass(int typeArgumentIndex) {
         Type type = getClass().getGenericSuperclass();
         if (!(type instanceof ParameterizedType)) {
             type = ((Class) type).getGenericSuperclass();
@@ -51,7 +57,7 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
         if (type instanceof ParameterizedType) {
             return (Class) ((ParameterizedType) type).getActualTypeArguments()[typeArgumentIndex];
         } else {
-            throwError(new RuntimeException("Wrong proxy configuration or usage for Parametrized types"));
+            throwError(new ClassCastException("Wrong proxy configuration or usage for Parametrized types"));
         }
         return null;
     }

@@ -1,12 +1,17 @@
 package com.dms;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Discriminator, 17.10.2014
- * <p/>
+ *
  * Identifies implementations that can be managed dynamically using a discriminator parameter.
- * <p/>
+ *
  * Copyright marius.dinu@gmail.com. All rights reserved.
  */
 @Target(ElementType.TYPE)

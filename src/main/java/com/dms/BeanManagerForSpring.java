@@ -23,6 +23,11 @@ import java.util.Set;
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 23/12/14.
  */
+
+/**
+ *
+ * @param <InterfaceType> the class type of the interface implemented by the implementation beans
+ */
 @Named("beanManager")
 class BeanManagerForSpring<InterfaceType> implements BeanManager {
 
@@ -59,7 +64,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public <InterfaceType> InterfaceType getTargetObject(InterfaceType proxy) {
         if (AopUtils.isJdkDynamicProxy(proxy)) {
             try {
@@ -98,8 +103,9 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         AnnotationMetadata annotationMetadata = ((ScannedGenericBeanDefinition) beanDefinition).getMetadata();
         if (annotationMetadata != null) {
             Map<String, Object> annotationAttributes = annotationMetadata.getAnnotationAttributes(clazz.getName());
-            if (annotationAttributes != null)
+            if (annotationAttributes != null) {
                 return (Boolean) annotationAttributes.get(attribute);
+            }
         }
         return false;
     }
@@ -110,7 +116,8 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
 
     private String getBeanName(BeanDefinition beanDefinition) {
         try {
-            String names[] = getApplicationContext().getBeanNamesForType(Class.forName(beanDefinition.getBeanClassName()));
+            String[] names = getApplicationContext().getBeanNamesForType(
+                    Class.forName(beanDefinition.getBeanClassName()));
             if (names != null && names.length == 1) {
                 return names[0];
             }

@@ -45,7 +45,7 @@ public class PerformanceTest {
         for (int i = 0; i < NO_OF_CALLS; i++)
             commonInterface.show(new WrappedParam(i + 1L, "name1"));
         final long activatedAnnotationTime = System.currentTimeMillis() - startMillis;
-        LOG.info("Call with activated @Discriminator took " + activatedAnnotationTime + " ms");
+        LOG.info("Call with activated "+DiscriminatorInterface.ANNOTATION_NAME+" took " + activatedAnnotationTime + " ms");
 
         discriminatorInterface.deactivate();
         assertFalse(discriminatorInterface.isActive());
@@ -53,7 +53,7 @@ public class PerformanceTest {
         for (int i = 0; i < NO_OF_CALLS; i++)
             commonInterface.show(new WrappedParam(i + 1L, "name1"));
         final long deactivatedAnnotationTime = System.currentTimeMillis() - startMillis2;
-        LOG.info("Call with deactivated @Discriminator took " + deactivatedAnnotationTime + " ms");
+        LOG.info("Call with deactivated "+DiscriminatorInterface.ANNOTATION_NAME+" took " + deactivatedAnnotationTime + " ms");
 
         LOG.info(NO_OF_CALLS + " calls took " + (activatedAnnotationTime - deactivatedAnnotationTime) + " ms ");
 
