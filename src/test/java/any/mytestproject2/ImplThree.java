@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by Marius on 27/09/14.
  */
 @Named
-@Discriminator(isDefault = true, isResultAggregated = true)
+@Discriminator(isResultAggregated = true)
 public class ImplThree implements CommonInterface {
 
     public static final String MSG = "Show message from ImplThree... 333";

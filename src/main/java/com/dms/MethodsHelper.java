@@ -12,10 +12,21 @@ import java.util.logging.Logger;
  */
 class MethodsHelper {
 
+    /**
+     * The Logger for this annotation usage and initialization.
+     */
+
     static final Logger LOG = Logger.getAnonymousLogger();
+
+    /**
+     * The class type of the interface implemented by the implementation beans.
+     */
 
     private Class interfaceClass;
 
+    /**
+     * The class type of the parameter used in choosing the implementation.
+     */
     private Class discriminatorClass;
 
     /**
@@ -34,23 +45,34 @@ class MethodsHelper {
      */
     private Set<Method> methodsToBeIntercepted = new HashSet<Method>();
 
-
+    /**
+     * The set of aggregated methods to be overridden by user.
+     */
     private Set<String> aggregatedMethods = null;
 
+    /**
+     * The set of un-intercepted methods to be overridden by user.
+     */
     private Set<String> unInterceptedMethods = null;
 
+    /**
+     * The set of intercepted methods to be overridden by user.
+     */
     private Set<String> interceptedMethods = null;
 
     /**
      * @param myInterfaceClass     the interface class
      * @param myDiscriminatorClass the discriminator class
      */
-    MethodsHelper(Class myInterfaceClass, Class myDiscriminatorClass) {
+    MethodsHelper(final Class myInterfaceClass, final Class myDiscriminatorClass) {
         this.setInterfaceClass(myInterfaceClass);
         this.setDiscriminatorClass(myDiscriminatorClass);
         init();
     }
 
+    /**
+     * Default constructor for MethodsHelper.
+     */
     MethodsHelper() {
         LOG.info("Loading methods...");
     }
@@ -59,7 +81,7 @@ class MethodsHelper {
         return discriminatorClass;
     }
 
-    void setDiscriminatorClass(Class discriminatorClass) {
+    void setDiscriminatorClass(final Class discriminatorClass) {
         this.discriminatorClass = discriminatorClass;
     }
 
@@ -67,7 +89,7 @@ class MethodsHelper {
         return interfaceClass;
     }
 
-    void setInterfaceClass(Class interfaceClass) {
+    void setInterfaceClass(final Class interfaceClass) {
         this.interfaceClass = interfaceClass;
     }
 

@@ -31,13 +31,25 @@ import java.util.Set;
 @Named("beanManager")
 class BeanManagerForSpring<InterfaceType> implements BeanManager {
 
+    /**
+     * The ClassLoader on which the implementation beans are searched for.
+     */
     private static final ClassLoader CLASS_LOADER = BeanManagerForSpring.class.getClassLoader();
 
+    /**
+     * The Spring ApplicationContext to be injected in Spring container.
+     */
     @Inject
     private ApplicationContext applicationContext;
 
+    /**
+     * The Aggregation flag for methods that return Collection.
+     */
     private boolean resultAggregated = false;
 
+    /**
+     * All implementations with @Discriminator annotation that implements InterfaceType.
+     */
     private final Map<String, InterfaceType> implementations = new HashMap<String, InterfaceType>();
 
     @PostConstruct

@@ -21,10 +21,17 @@ import java.util.Map;
 abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extends MethodsHelper
         implements DiscriminatorInterface<DiscriminatorType, InterfaceType> {
 
+    /**
+     * Interface BeanManager is implemented for Spring container.
+     */
     @Inject
     @Named("beanManager")
     private BeanManager beanManager;
 
+    /**
+     * Default active value for the discriminator usage is true.
+     * If the class gets initialized then I suppose it is enabled.
+     */
     private boolean active = true;
 
     DiscriminatorInitializer() {
@@ -49,7 +56,7 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
      * @param typeArgumentIndex the argument position
      * @return the argument class type
      */
-    private Class getTypeArgumentClass(int typeArgumentIndex) {
+    private Class getTypeArgumentClass(final int typeArgumentIndex) {
         Type type = getClass().getGenericSuperclass();
         if (!(type instanceof ParameterizedType)) {
             type = ((Class) type).getGenericSuperclass();
@@ -83,11 +90,11 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
         this.active = false;
     }
 
-    BeanManager getBeanManager() {
+    protected BeanManager getBeanManager() {
         return beanManager;
     }
 
-    protected void setBeanManager(BeanManager beanManager) {
+    protected void setBeanManager(final BeanManager beanManager) {
         this.beanManager = beanManager;
     }
 }

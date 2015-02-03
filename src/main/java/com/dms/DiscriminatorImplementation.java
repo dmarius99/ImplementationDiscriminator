@@ -23,7 +23,7 @@ public abstract class DiscriminatorImplementation<DiscriminatorType, InterfaceTy
      * @return the return type
      * @throws Throwable if any exception appears
      */
-    public Object defaultIntercept(ProceedingJoinPoint joinPoint) throws Throwable {
+    public final Object defaultIntercept(ProceedingJoinPoint joinPoint) throws Throwable {
         if (isActive()) {
             return discriminateExecutionPoint(joinPoint);
         } else {

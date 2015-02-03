@@ -20,8 +20,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Discriminator {
 
-    boolean isDefault() default false;
-
+    /**
+     * @return true if methods that return Collection should be aggregated/combined, false otherwise.
+     */
     boolean isResultAggregated() default false;
 
 }

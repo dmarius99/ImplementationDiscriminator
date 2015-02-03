@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by Marius Dinu (marius.dinu@gmail.com) on 23/12/14.
  */
 @Named
-@Discriminator(isDefault = true, isResultAggregated = true)
+@Discriminator(isResultAggregated = true)
 public class FloatMath extends AtomicLong implements Comparable {
     public FloatMath(long initialValue) {
         super(initialValue);

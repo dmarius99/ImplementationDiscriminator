@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by Marius on 27/09/14.
  */
 @Named
-@Discriminator(isDefault = true, isResultAggregated = false)
+@Discriminator(isResultAggregated = false)
 public class ImplOne implements CommonInterface {
 
     public static final String MSG = "Show message from ImplOne... 111";

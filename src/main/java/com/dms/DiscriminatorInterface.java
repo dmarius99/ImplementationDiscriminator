@@ -16,10 +16,24 @@ import org.aspectj.lang.ProceedingJoinPoint;
 interface DiscriminatorInterface<DiscriminatorType, InterfaceType>
         extends Discriminate<DiscriminatorType, InterfaceType> {
 
+    /**
+     * The annotation full name.
+     */
     String ANNOTATION_NAME = "@Discriminator";
-    String IS_DEFAULT = "isDefault";
+
+    /**
+     * The method name in the annotation for setting the aggregation flag.
+     */
     String IS_RESULT_AGGREGATED = "isResultAggregated";
+
+    /**
+     * The method name to discriminate execution.
+     */
     String DISCRIMINATE_EXECUTION_POINT = "discriminateExecutionPoint";
+
+    /**
+     * The default package name for this project.
+     */
     String BASE_PACKAGE = "com.dms";
 
     /**

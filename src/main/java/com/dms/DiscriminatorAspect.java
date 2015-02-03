@@ -17,6 +17,9 @@ import javax.inject.Named;
 @Named
 class DiscriminatorAspect {
 
+    /**
+     * DiscriminatorInterface injected here in order to delegate the defaultIntercept.
+     */
     @Inject
     private DiscriminatorInterface discriminatorInterface;
 
@@ -25,7 +28,7 @@ class DiscriminatorAspect {
     }
 
     @Around("getBeansAnnotatedWithDiscriminator()")
-    public Object intercept(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object intercept(final ProceedingJoinPoint joinPoint) throws Throwable {
         return getDiscriminatorInterface().defaultIntercept(joinPoint);
     }
 
