@@ -5,11 +5,14 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.junit.Test;
 import org.mockito.internal.verification.Times;
+import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 25/12/14.
@@ -18,10 +21,13 @@ public class DiscriminatorImplementationTest {
 
     @Test
     public void testDefaultIntercept() throws Throwable {
+        ProceedingJoinPoint proceedingJoinPoint = mock(MethodInvocationProceedingJoinPoint.class);
+
         DiscriminatorExampleForNumbers discriminatorImplementation = new DiscriminatorExampleForNumbers();
-        ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+        when(proceedingJoinPoint.proceed()).thenReturn(mock(Object.class));
         Signature signature = mock(Signature.class);
         BeanManagerForSpring beanManagerForSpring = mock(BeanManagerForSpring.class);
+
         when(proceedingJoinPoint.getSignature()).thenReturn(signature);
         when(proceedingJoinPoint.getArgs()).thenReturn(new Object[0]);
         discriminatorImplementation.setBeanManager(beanManagerForSpring);

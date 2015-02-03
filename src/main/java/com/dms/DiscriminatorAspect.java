@@ -10,7 +10,7 @@ import javax.inject.Named;
 
 /**
  * DiscriminatorAspect, 17.10.2014
- * <p/>
+ *
  * Marius Dinu (marius.dinu@gmail.com). All rights reserved.
  */
 @Aspect
@@ -33,7 +33,4 @@ class DiscriminatorAspect {
         return discriminatorInterface;
     }
 
-    public void setDiscriminatorInterface(DiscriminatorInterface discriminatorInterface) {
-        this.discriminatorInterface = discriminatorInterface;
-    }
 }

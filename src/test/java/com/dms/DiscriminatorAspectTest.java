@@ -2,30 +2,30 @@ package com.dms;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.Test;
+import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class DiscriminatorAspectTest {
 
-    private DiscriminatorAspect discriminatorAspect = new DiscriminatorAspect();
+    @Test(expected = NullPointerException.class)
+    public void testInterceptThrowsNullPointerException() throws Throwable {
+        DiscriminatorAspect discriminatorAspect = new DiscriminatorAspect();
+        discriminatorAspect.intercept(null);
+    }
 
     @Test
-    public void testIntercept() throws Throwable {
-        ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
-        DiscriminatorInterface discriminatorInterface = mock(DiscriminatorInterface.class);
-        discriminatorAspect.setDiscriminatorInterface(discriminatorInterface);
+    public void testInterceptThrowsException() throws Throwable {
+        final DiscriminatorInterface discriminatorInterface = mock(DiscriminatorInterface.class);
+        DiscriminatorAspect discriminatorAspect = new DiscriminatorAspect() {
+            @Override
+            DiscriminatorInterface getDiscriminatorInterface() {
+                return discriminatorInterface;
+            }
+        };
+        ProceedingJoinPoint joinPoint = mock(MethodInvocationProceedingJoinPoint.class);
         discriminatorAspect.intercept(joinPoint);
         verify(discriminatorInterface).defaultIntercept(joinPoint);
     }
-
-    @Test
-    public void testSetAndGetDiscriminatorInterface() throws Exception {
-        DiscriminatorInterface discriminatorInterface = mock(DiscriminatorInterface.class);
-        discriminatorAspect.setDiscriminatorInterface(discriminatorInterface);
-        DiscriminatorInterface discriminatorInterface1 = discriminatorAspect.getDiscriminatorInterface();
-        assertEquals(discriminatorInterface, discriminatorInterface1);
-    }
-
 }

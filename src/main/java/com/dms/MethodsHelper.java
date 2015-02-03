@@ -19,7 +19,7 @@ class MethodsHelper {
     private Class discriminatorClass;
 
     /**
-     * This type of methods should return the result from only one of the implementations
+     * This type of methods should return the result from only one of the implementations.
      */
     private Set<Method> methodsNotToBeIntercepted = new HashSet<Method>();
 
@@ -30,7 +30,7 @@ class MethodsHelper {
     private Set<Method> methodsToBeAggregated = new HashSet<Method>();
 
     /**
-     * Methods that will be intercepted by the aspect in order to be discriminated
+     * Methods that will be intercepted by the aspect in order to be discriminated.
      */
     private Set<Method> methodsToBeIntercepted = new HashSet<Method>();
 
@@ -91,7 +91,7 @@ class MethodsHelper {
         return getMethods(aggregatedMethods, methodsToBeAggregated);
     }
 
-    public void setAggregatedMethods(Set<String> aggregatedMethods) {
+    public final void setAggregatedMethods(Set<String> aggregatedMethods) {
         this.aggregatedMethods = aggregatedMethods;
     }
 
@@ -99,7 +99,7 @@ class MethodsHelper {
         return getMethods(unInterceptedMethods, methodsNotToBeIntercepted);
     }
 
-    public void setUnInterceptedMethods(Set<String> unInterceptedMethods) {
+    public final void setUnInterceptedMethods(Set<String> unInterceptedMethods) {
         this.unInterceptedMethods = unInterceptedMethods;
     }
 
@@ -107,11 +107,11 @@ class MethodsHelper {
         return getMethods(interceptedMethods, methodsNotToBeIntercepted);
     }
 
-    public void setInterceptedMethods(Set<String> interceptedMethods) {
+    public final void setInterceptedMethods(Set<String> interceptedMethods) {
         this.interceptedMethods = interceptedMethods;
     }
 
-    public Set<String> getMethods(Set<String> methodsAsStrings, Set<Method> methodsAsObjects) {
+    private Set<String> getMethods(Set<String> methodsAsStrings, Set<Method> methodsAsObjects) {
         if (methodsAsStrings == null) {
             methodsAsStrings = new HashSet<String>();
             for (Method method : methodsAsObjects) {
@@ -124,10 +124,10 @@ class MethodsHelper {
     }
 
     /**
-     * Initializes 3 sets on methods(interceptedMethods, unInterceptedMethods, aggregatedMethods)
+     * Initializes 3 sets on methods(interceptedMethods, unInterceptedMethods, aggregatedMethods).
      */
     private void initMethodsByRole() {
-        Method methods[] = getInterfaceClass().getDeclaredMethods();
+        Method[] methods = getInterfaceClass().getDeclaredMethods();
 
         for (Method method : methods) {
             Class<?>[] parameterTypes = method.getParameterTypes();
@@ -161,13 +161,13 @@ class MethodsHelper {
         return isIntercepted;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private boolean shouldMethodBeAggregated(Method method) {
         return Collection.class.isAssignableFrom(method.getReturnType());
     }
 
     /**
-     * Initializes the method sets
+     * Initializes the 3 method type sets(aggregated, intercepted and not-intercepted).
      */
     void init() {
         initMethodsByRole();
