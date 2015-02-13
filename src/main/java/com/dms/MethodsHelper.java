@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
  */
-class MethodsHelper {
+class MethodsHelper implements MethodsHelperOverrideCapabilities {
 
     /**
      * The Logger for this annotation usage and initialization.
@@ -32,18 +32,18 @@ class MethodsHelper {
     /**
      * This type of methods should return the result from only one of the implementations.
      */
-    private Set<Method> methodsNotToBeIntercepted = new HashSet<Method>();
+    private final Set<Method> methodsNotToBeIntercepted = new HashSet<Method>();
 
     /**
      * This type of methods should return the same result for any implementation.
      * Use only methods that return instances of Collection.
      */
-    private Set<Method> methodsToBeAggregated = new HashSet<Method>();
+    private final Set<Method> methodsToBeAggregated = new HashSet<Method>();
 
     /**
      * Methods that will be intercepted by the aspect in order to be discriminated.
      */
-    private Set<Method> methodsToBeIntercepted = new HashSet<Method>();
+    private final Set<Method> methodsToBeIntercepted = new HashSet<Method>();
 
     /**
      * The set of aggregated methods to be overridden by user.
@@ -93,43 +93,30 @@ class MethodsHelper {
         this.interfaceClass = interfaceClass;
     }
 
-    Set<Method> getMethodsNotToBeIntercepted() {
-        return methodsNotToBeIntercepted;
-    }
-
-    void setMethodsNotToBeIntercepted(Set<Method> methodsNotToBeIntercepted) {
-        this.methodsNotToBeIntercepted = methodsNotToBeIntercepted;
-    }
-
-    Set<Method> getMethodsToBeAggregated() {
-        return methodsToBeAggregated;
-    }
-
-    void setMethodsToBeAggregated(Set<Method> methodsToBeAggregated) {
-        this.methodsToBeAggregated = methodsToBeAggregated;
-    }
-
+    @Override
     public Set<String> getAggregatedMethods() {
         return getMethods(aggregatedMethods, methodsToBeAggregated);
     }
 
-    public final void setAggregatedMethods(Set<String> aggregatedMethods) {
+    final void setAggregatedMethods(Set<String> aggregatedMethods) {
         this.aggregatedMethods = aggregatedMethods;
     }
 
+    @Override
     public Set<String> getUnInterceptedMethods() {
         return getMethods(unInterceptedMethods, methodsNotToBeIntercepted);
     }
 
-    public final void setUnInterceptedMethods(Set<String> unInterceptedMethods) {
+    final void setUnInterceptedMethods(Set<String> unInterceptedMethods) {
         this.unInterceptedMethods = unInterceptedMethods;
     }
 
+    @Override
     public Set<String> getInterceptedMethods() {
         return getMethods(interceptedMethods, methodsNotToBeIntercepted);
     }
 
-    public final void setInterceptedMethods(Set<String> interceptedMethods) {
+    final void setInterceptedMethods(Set<String> interceptedMethods) {
         this.interceptedMethods = interceptedMethods;
     }
 
@@ -173,6 +160,7 @@ class MethodsHelper {
         }
     }
 
+    @SuppressWarnings({ "unchecked" })
     private boolean shouldMethodBeIntercepted(Class<?>[] parameterTypes) {
         boolean isIntercepted = false;
         for (Class clazz : parameterTypes) {

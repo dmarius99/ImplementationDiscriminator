@@ -90,7 +90,7 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
         this.active = false;
     }
 
-    protected BeanManager getBeanManager() {
+    BeanManager getBeanManager() {
         return beanManager;
     }
 

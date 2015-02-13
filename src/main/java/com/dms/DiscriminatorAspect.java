@@ -20,8 +20,12 @@ class DiscriminatorAspect {
     /**
      * DiscriminatorInterface injected here in order to delegate the defaultIntercept.
      */
+    private final DiscriminatorInterface discriminatorInterface;
+
     @Inject
-    private DiscriminatorInterface discriminatorInterface;
+    DiscriminatorAspect(@Named DiscriminatorInterface discriminatorInterface) {
+        this.discriminatorInterface = discriminatorInterface;
+    }
 
     @Pointcut("@target(com.dms.Discriminator)")
     public void getBeansAnnotatedWithDiscriminator() {
@@ -29,11 +33,7 @@ class DiscriminatorAspect {
 
     @Around("getBeansAnnotatedWithDiscriminator()")
     public Object intercept(final ProceedingJoinPoint joinPoint) throws Throwable {
-        return getDiscriminatorInterface().defaultIntercept(joinPoint);
-    }
-
-    DiscriminatorInterface getDiscriminatorInterface() {
-        return discriminatorInterface;
+        return discriminatorInterface.defaultIntercept(joinPoint);
     }
 
 }

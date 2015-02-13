@@ -65,14 +65,10 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         }
     }
 
+    @SuppressWarnings({ "unchecked" })
     @Override
     public Map<String, InterfaceType> getImplementationBeans() {
         return implementations;
-    }
-
-    @Override
-    public boolean isResultAggregated() {
-        return resultAggregated;
     }
 
     @Override
@@ -88,6 +84,18 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return proxy;
     }
 
+    @SuppressWarnings({ "unchecked" })
+    private InterfaceType getImplementationBean(BeanDefinition beanDefinition) {
+        String beanName = getBeanName(beanDefinition);
+        InterfaceType beanInterfaceType = (InterfaceType) getApplicationContext().getBean(beanName);
+        return getTargetObject(beanInterfaceType);
+    }
+
+    @Override
+    public boolean isResultAggregated() {
+        return resultAggregated;
+    }
+
     Set<BeanDefinition> getScannedImplementations() {
         ClassPathScanningCandidateComponentProvider scanner =
                 new ClassPathScanningCandidateComponentProvider(false);
@@ -99,12 +107,6 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         scanner.addExcludeFilter(new AssignableTypeFilter(DiscriminatorInitializer.class));
 
         return scanner.findCandidateComponents("*.*");
-    }
-
-    private InterfaceType getImplementationBean(BeanDefinition beanDefinition) {
-        String beanName = getBeanName(beanDefinition);
-        InterfaceType beanInterfaceType = (InterfaceType) getApplicationContext().getBean(beanName);
-        return getTargetObject(beanInterfaceType);
     }
 
     private Boolean getIsResultAggregated(BeanDefinition beanDefinition) {

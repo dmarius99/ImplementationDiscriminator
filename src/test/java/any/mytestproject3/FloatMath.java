@@ -10,7 +10,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Named
 @Discriminator(isResultAggregated = true)
-public class FloatMath extends AtomicLong implements Comparable {
+public class FloatMath extends AtomicLong implements Comparable<FloatMath> {
+
     public FloatMath(long initialValue) {
         super(initialValue);
     }
@@ -19,14 +20,14 @@ public class FloatMath extends AtomicLong implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        if (o == null) {
+    public int compareTo(FloatMath that) {
+        if (that == null) {
             return -1;
         }
-        if (this.longValue() == ((AtomicLong) o).longValue()) {
+        if (this.longValue() == that.longValue()) {
             return 0;
         } else {
-            if (this.longValue() > ((AtomicLong) o).longValue()) {
+            if (this.longValue() > that.longValue()) {
                 return 1;
             } else {
                 return -1;

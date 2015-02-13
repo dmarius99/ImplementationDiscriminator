@@ -11,8 +11,8 @@ import javax.inject.Named;
 public class DiscriminatorExampleForNumbers extends DiscriminatorImplementation<Number, Comparable> {
 
     public Comparable getImplementationForDiscriminator(Number parameter) {
-        if (parameter.intValue() < 1000) {
-            return getImplementations().get(FloatMath.class.getName());
+        if (parameter.longValue() < Integer.MAX_VALUE) {
+            return getImplementations().get(IntMath.class.getName());
         } else {
             return getImplementations().get(FloatMath.class.getName());
         }
