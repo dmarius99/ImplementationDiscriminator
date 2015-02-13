@@ -8,13 +8,18 @@ import javax.inject.Named;
  * Created by Marius Dinu (marius.dinu@gmail.com) on 23/12/14.
  */
 @Named
-public class DiscriminatorExampleForNumbers extends DiscriminatorImplementation<Number, Comparable> {
+public class DiscriminatorExampleForNumbers extends DiscriminatorImplementation<Number, MathOperations> {
 
-    public Comparable getImplementationForDiscriminator(Number parameter) {
+    @Override
+    public MathOperations getImplementationForDiscriminator(Number parameter) {
         if (parameter.longValue() < Integer.MAX_VALUE) {
-            return getImplementations().get(IntMath.class.getName());
+            return getImplementations().get(IntegerMathOperations.class.getName());
         } else {
-            return getImplementations().get(FloatMath.class.getName());
+            if (parameter.longValue() > Integer.MAX_VALUE) {
+                return getImplementations().get(LongMathOperations.class.getName());
+            } else {
+                return null;
+            }
         }
     }
 

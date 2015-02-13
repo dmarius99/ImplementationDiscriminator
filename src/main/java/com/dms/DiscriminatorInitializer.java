@@ -58,15 +58,7 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
      */
     private Class getTypeArgumentClass(final int typeArgumentIndex) {
         Type type = getClass().getGenericSuperclass();
-        if (!(type instanceof ParameterizedType)) {
-            type = ((Class) type).getGenericSuperclass();
-        }
-        if (type instanceof ParameterizedType) {
-            return (Class) ((ParameterizedType) type).getActualTypeArguments()[typeArgumentIndex];
-        } else {
-            throwError(new ClassCastException("Wrong proxy configuration or usage for Parametrized types"));
-        }
-        return null;
+        return (Class) ((ParameterizedType) type).getActualTypeArguments()[typeArgumentIndex];
     }
 
     @Override
@@ -74,7 +66,7 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
         return getBeanManager().getImplementationBeans();
     }
 
-    boolean isResultAggregated() {
+    protected boolean isResultAggregated() {
         return getBeanManager().isResultAggregated();
     }
 

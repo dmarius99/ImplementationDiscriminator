@@ -113,14 +113,14 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
 
     @Override
     public Set<String> getInterceptedMethods() {
-        return getMethods(interceptedMethods, methodsNotToBeIntercepted);
+        return getMethods(interceptedMethods, methodsToBeIntercepted);
     }
 
     final void setInterceptedMethods(Set<String> interceptedMethods) {
         this.interceptedMethods = interceptedMethods;
     }
 
-    private Set<String> getMethods(Set<String> methodsAsStrings, Set<Method> methodsAsObjects) {
+    Set<String> getMethods(Set<String> methodsAsStrings, Set<Method> methodsAsObjects) {
         if (methodsAsStrings == null) {
             methodsAsStrings = new HashSet<String>();
             for (Method method : methodsAsObjects) {
@@ -139,17 +139,8 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
         Method[] methods = getInterfaceClass().getDeclaredMethods();
 
         for (Method method : methods) {
-            Class<?>[] parameterTypes = method.getParameterTypes();
-            if (parameterTypes != null) {
-                if (shouldMethodBeIntercepted(parameterTypes)) {
-                    methodsToBeIntercepted.add(method);
-                } else {
-                    if (shouldMethodBeAggregated(method)) {
-                        methodsToBeAggregated.add(method);
-                    } else {
-                        methodsNotToBeIntercepted.add(method);
-                    }
-                }
+            if (shouldMethodBeIntercepted(method)) {
+                methodsToBeIntercepted.add(method);
             } else {
                 if (shouldMethodBeAggregated(method)) {
                     methodsToBeAggregated.add(method);
@@ -161,18 +152,20 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
     }
 
     @SuppressWarnings({ "unchecked" })
-    private boolean shouldMethodBeIntercepted(Class<?>[] parameterTypes) {
-        boolean isIntercepted = false;
-        for (Class clazz : parameterTypes) {
+    boolean shouldMethodBeIntercepted(Method method) {
+        if (method==null || method.getParameterTypes()==null || method.getParameterTypes().length==0) {
+            return false;
+        }
+        for (Class clazz : method.getParameterTypes()) {
             if (getDiscriminatorClass().isAssignableFrom(clazz)) {
-                isIntercepted = true;
+                return true;
             }
         }
-        return isIntercepted;
+        return false;
     }
 
     @SuppressWarnings({ "unchecked" })
-    private boolean shouldMethodBeAggregated(Method method) {
+    boolean shouldMethodBeAggregated(Method method) {
         return Collection.class.isAssignableFrom(method.getReturnType());
     }
 
@@ -216,7 +209,7 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
         throw new RuntimeException("Critical error in DiscriminatorImplementation: ", t);
     }
 
-    private void throwMethodsNotUnique(String methodName) {
+    void throwMethodsNotUnique(String methodName) {
         throw new RuntimeException("Method name not unique: " + methodName);
     }
 }

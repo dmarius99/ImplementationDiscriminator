@@ -1,7 +1,8 @@
 package com.dms;
 
 import any.mytestproject3.DiscriminatorExampleForNumbers;
-import any.mytestproject3.FloatMath;
+import any.mytestproject3.LongMathOperations;
+import any.mytestproject3.MathOperations;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,9 +25,9 @@ public class DiscriminatorInitializerTest {
         mockDiscriminator = mock(DiscriminatorInitializer.class);
         mockBeanManagerForSpring = mock(BeanManagerForSpring.class);
 
-        Comparable defaultImpl = new FloatMath();
-        Map<String, Comparable> implementations = new HashMap<String, Comparable>();
-        implementations.put(FloatMath.class.getName(), defaultImpl);
+        MathOperations defaultImpl = new LongMathOperations();
+        Map<String, MathOperations> implementations = new HashMap<String, MathOperations>();
+        implementations.put(LongMathOperations.class.getName(), defaultImpl);
         discriminatorInitializer.setBeanManager(mockBeanManagerForSpring);
 
         when(mockDiscriminator.getBeanManager()).thenReturn(mockBeanManagerForSpring);
@@ -35,7 +36,7 @@ public class DiscriminatorInitializerTest {
 
     @Test
     public void testInitDependenciesWithOneImplementationNotAggregated() throws Exception {
-        assertEquals(discriminatorInitializer.getInterfaceClass(), Comparable.class);
+        assertEquals(discriminatorInitializer.getInterfaceClass(), MathOperations.class);
         assertEquals(discriminatorInitializer.getDiscriminatorClass(), Number.class);
         assertEquals(discriminatorInitializer.getImplementations().size(), 1);
         assertTrue(discriminatorInitializer.isActive());
@@ -45,7 +46,7 @@ public class DiscriminatorInitializerTest {
     @Test
     public void testImplementationClassName() throws Exception {
         String beanClassName = discriminatorInitializer.getImplementations().keySet().toArray()[0].toString();
-        assertEquals(FloatMath.class.getName(), beanClassName);
+        assertEquals(LongMathOperations.class.getName(), beanClassName);
     }
 
     @Test
@@ -57,6 +58,20 @@ public class DiscriminatorInitializerTest {
 
     @Test
     public void testValidate() throws Exception {
+        discriminatorInitializer.validate();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testValidateThrowsForImplementations() throws Exception {
+        discriminatorInitializer.setBeanManager(mockBeanManagerForSpring);
+        when(mockBeanManagerForSpring.getImplementationBeans()).thenReturn(new HashMap());
+        discriminatorInitializer.validate();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testValidateThrowsForImplementations2() throws Exception {
+        discriminatorInitializer.setBeanManager(mockBeanManagerForSpring);
+        when(mockBeanManagerForSpring.getImplementationBeans()).thenReturn(null);
         discriminatorInitializer.validate();
     }
 

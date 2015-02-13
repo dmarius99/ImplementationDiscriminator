@@ -10,9 +10,8 @@ import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 25/12/14.
@@ -32,6 +31,7 @@ public class DiscriminatorImplementationTest {
         when(proceedingJoinPoint.getArgs()).thenReturn(new Object[0]);
         discriminatorImplementation.setBeanManager(beanManagerForSpring);
         when(beanManagerForSpring.isResultAggregated()).thenReturn(true);
+        assertTrue(discriminatorImplementation.isResultAggregated());
 
         Object result1 = discriminatorImplementation.defaultIntercept(proceedingJoinPoint);
         verify(proceedingJoinPoint).proceed();

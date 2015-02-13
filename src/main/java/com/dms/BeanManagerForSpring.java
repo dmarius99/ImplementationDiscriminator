@@ -1,7 +1,6 @@
 package com.dms;
 
 import org.springframework.aop.framework.Advised;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -58,9 +57,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         for (BeanDefinition bean : scannedImplementations) {
             if (isBeanAvailable(bean)) {
                 implementations.put(bean.getBeanClassName(), getImplementationBean(bean));
-                if (!resultAggregated) {
-                    resultAggregated = getIsResultAggregated(bean);
-                }
+                resultAggregated = isResultAggregated() || getIsResultAggregated(bean);
             }
         }
     }
@@ -71,17 +68,19 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return implementations;
     }
 
-    @Override
+    /**
+     *
+     * @param proxy one implementation of the interface (reference to a proxy)
+     * @param <InterfaceType> the interface of the implementations
+     * @return the target implementation behind the proxy
+     */
     @SuppressWarnings({ "unchecked" })
-    public <InterfaceType> InterfaceType getTargetObject(InterfaceType proxy) {
-        if (AopUtils.isJdkDynamicProxy(proxy)) {
-            try {
-                return (InterfaceType) ((Advised) proxy).getTargetSource().getTarget();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+    <InterfaceType> InterfaceType getTargetObject(InterfaceType proxy) {
+        try {
+            return (InterfaceType) ((Advised) proxy).getTargetSource().getTarget();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return proxy;
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -121,7 +120,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
                 return (Boolean) annotationAttributes.get(attribute);
             }
         }
-        return false;
+        return null;
     }
 
     private boolean isBeanAvailable(BeanDefinition beanDefinition) {
