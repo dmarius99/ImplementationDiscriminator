@@ -11,7 +11,7 @@ import java.util.Set;
  * @version $Id$
  */
 
-public interface MethodsHelperOverrideCapabilities {
+interface MethodsHelperOverrideCapabilities {
 
     Set<String> getAggregatedMethods();
 

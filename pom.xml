@@ -41,6 +41,21 @@
         </developer>
     </developers>
 
+    <properties>
+        <!-- Application settings -->
+        <copyright.year>2014</copyright.year>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Production dependency versions -->
+        <spring.version>3.2.1.RELEASE</spring.version>
+
+        <!-- Testing dependency versions -->
+        <junit.version>4.8.1</junit.version>
+        <mockito.version>1.9.5</mockito.version>
+        <aspectj.version>1.8.2</aspectj.version>
+        <java.source-target.version>1.7</java.source-target.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -76,6 +91,36 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-all</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
         </dependency>
     </dependencies>
 
@@ -114,19 +159,6 @@
         </plugins>
     </reporting>
 
-    <properties>
-        <!-- Application settings -->
-        <copyright.year>2014</copyright.year>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Production dependency versions -->
-        <spring.version>3.2.1.RELEASE</spring.version>
-
-        <!-- Testing dependency versions -->
-        <junit.version>4.8.1</junit.version>
-        <mockito.version>1.9.5</mockito.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -134,8 +166,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${java.source-target.version}</source>
+                    <target>${java.source-target.version}</target>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
             </plugin>
             <plugin>
@@ -150,4 +183,51 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>ajc</id>
+            <activation>
+                <property>
+                    <name>aspectjweaver</name>
+                </property>
+                <!--<activeByDefault>true</activeByDefault>-->
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>aspectj-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <configuration>
+                            <showWeaveInfo>true</showWeaveInfo>
+                            <source>${java.source-target.version}</source>
+                            <target>${java.source-target.version}</target>
+                            <Xlint>ignore</Xlint>
+                            <complianceLevel>${java.source-target.version}</complianceLevel>
+                            <encoding>UTF-8</encoding>
+                            <verbose>true</verbose>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                    <goal>test-compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.aspectj</groupId>
+                                <artifactId>aspectjtools</artifactId>
+                                <version>${aspectj.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

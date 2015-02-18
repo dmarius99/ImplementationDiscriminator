@@ -32,9 +32,7 @@ public class DiscriminatorAspectTest {
     }
 
     @Test
-    public void testGetBeansAnnotatedWithDiscriminator() throws NoSuchMethodException {
-        DiscriminatorAspect discriminatorAspect = new DiscriminatorAspect(null);
-        discriminatorAspect.getBeansAnnotatedWithDiscriminator();
+    public void testAndCheckAnnotations() throws NoSuchMethodException {
         Annotation[] annotations = DiscriminatorAspect.class.getAnnotations();
         Class<? extends Annotation> class1 = annotations[0].annotationType();
         Class<? extends Annotation> class2 = annotations[1].annotationType();

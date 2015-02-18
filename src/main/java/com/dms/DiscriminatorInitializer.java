@@ -2,7 +2,6 @@ package com.dms;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -25,7 +24,6 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
      * Interface BeanManager is implemented for Spring container.
      */
     @Inject
-    @Named("beanManager")
     private BeanManager beanManager;
 
     /**

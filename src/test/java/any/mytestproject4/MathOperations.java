@@ -1,4 +1,4 @@
-package any.mytestproject3;
+package any.mytestproject4;
 
 /**
  * MathOperations, 13.02.2015
