@@ -23,6 +23,6 @@
         <module name="JavadocVariable"/>
         <module name="JavadocMethod"/>
         <module name="HiddenField"/>
-
+        <module name="MissingOverride"/>
     </module>
 </module>

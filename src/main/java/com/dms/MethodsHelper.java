@@ -98,7 +98,7 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
         return getMethods(aggregatedMethods, methodsToBeAggregated);
     }
 
-    final void setAggregatedMethods(Set<String> aggregatedMethods) {
+    final void setAggregatedMethods(final Set<String> aggregatedMethods) {
         this.aggregatedMethods = aggregatedMethods;
     }
 
@@ -107,7 +107,7 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
         return getMethods(unInterceptedMethods, methodsNotToBeIntercepted);
     }
 
-    final void setUnInterceptedMethods(Set<String> unInterceptedMethods) {
+    final void setUnInterceptedMethods(final Set<String> unInterceptedMethods) {
         this.unInterceptedMethods = unInterceptedMethods;
     }
 
@@ -116,7 +116,7 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
         return getMethods(interceptedMethods, methodsToBeIntercepted);
     }
 
-    final void setInterceptedMethods(Set<String> interceptedMethods) {
+    final void setInterceptedMethods(final Set<String> interceptedMethods) {
         this.interceptedMethods = interceptedMethods;
     }
 
@@ -152,8 +152,8 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
     }
 
     @SuppressWarnings({ "unchecked" })
-    boolean shouldMethodBeIntercepted(Method method) {
-        if (method==null || method.getParameterTypes()==null || method.getParameterTypes().length==0) {
+    boolean shouldMethodBeIntercepted(final Method method) {
+        if (method == null || method.getParameterTypes() == null || method.getParameterTypes().length == 0) {
             return false;
         }
         for (Class clazz : method.getParameterTypes()) {
@@ -165,7 +165,7 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
     }
 
     @SuppressWarnings({ "unchecked" })
-    boolean shouldMethodBeAggregated(Method method) {
+    boolean shouldMethodBeAggregated(final Method method) {
         return Collection.class.isAssignableFrom(method.getReturnType());
     }
 
@@ -180,6 +180,9 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
         logInitialization();
     }
 
+    /**
+     * Lists the methods to discriminate on.
+     */
     private void logInitialization() {
         LOG.info("******************************************");
         LOG.info("Methods to be intercepted " + methodsToBeIntercepted.size() + ": ");
@@ -202,14 +205,18 @@ class MethodsHelper implements MethodsHelperOverrideCapabilities {
     /**
      * Throws an RuntimeException.
      *
-     * @param t Exception
+     * @param throwable Exception
      */
-    void throwError(Throwable t) {
-        LOG.log(Level.SEVERE, "Critical error in DiscriminatorImplementation: ", t);
-        throw new RuntimeException("Critical error in DiscriminatorImplementation: ", t);
+    void throwError(final Throwable throwable) {
+        LOG.log(Level.SEVERE, "Critical error in DiscriminatorImplementation: ", throwable);
+        throw new RuntimeException("Critical error in DiscriminatorImplementation: ", throwable);
     }
 
-    void throwMethodsNotUnique(String methodName) {
+    /**
+     * Throws a RuntimeException for method not unique.
+     * @param methodName the duplicated method name
+     */
+    void throwMethodsNotUnique(final String methodName) {
         throw new RuntimeException("Method name not unique: " + methodName);
     }
 }

@@ -5,17 +5,24 @@ import java.util.Set;
 /**
  * MethodsHelperOverrideCapabilities, 13.02.2015
  *
- * Copyright (c) 2014 1&1 Internet AG. All rights reserved.
+ * Created by Marius Dinu (marius.dinu@gmail.com) on 13/02/14.
  *
- * @author mdinu
- * @version $Id$
  */
-
 interface MethodsHelperOverrideCapabilities {
 
+    /**
+     * @return a set of aggregated methods
+     */
     Set<String> getAggregatedMethods();
 
+    /**
+     * @return a set of un-intercepted methods
+     */
     Set<String> getUnInterceptedMethods();
 
+    /**
+     *
+     * @return a set of intercepted methods
+     */
     Set<String> getInterceptedMethods();
 }

@@ -91,7 +91,7 @@ public class MethodsHelperTest {
 
     @Test
     public void testGetInterceptedMethods() {
-        Set<String> mockMethods = new TreeSet<>();
+        Set<String> mockMethods = new TreeSet<String>();
         MethodsHelper methodsHelper = mock(MethodsHelper.class);
         Set<String> interceptedMethods = methodsHelper.getInterceptedMethods();
         when(methodsHelper.getMethods(anySet(), anySet())).thenReturn(mockMethods);
@@ -101,7 +101,7 @@ public class MethodsHelperTest {
     @Test(expected = RuntimeException.class)
     public void testGetMethods() {
         Set<String> mockMethodStrings = null;
-        Set<Method> mockMethods = new HashSet<>();
+        Set<Method> mockMethods = new HashSet<Method>();
         Collections.addAll(mockMethods, ClassWithSameMethodNames.class.getMethods());
         MethodsHelper methodsHelper = new MethodsHelper();
         methodsHelper.getMethods(mockMethodStrings, mockMethods);

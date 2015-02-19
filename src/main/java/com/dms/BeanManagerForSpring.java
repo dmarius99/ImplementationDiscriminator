@@ -75,7 +75,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
      * @return the target implementation behind the proxy
      */
     @SuppressWarnings({ "unchecked" })
-    <InterfaceType> InterfaceType getTargetObject(InterfaceType proxy) {
+    <InterfaceType> InterfaceType getTargetObject(final InterfaceType proxy) {
         try {
             return (InterfaceType) ((Advised) proxy).getTargetSource().getTarget();
         } catch (Exception e) {
@@ -84,7 +84,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     }
 
     @SuppressWarnings({ "unchecked" })
-    private InterfaceType getImplementationBean(BeanDefinition beanDefinition) {
+    private InterfaceType getImplementationBean(final BeanDefinition beanDefinition) {
         String beanName = getBeanName(beanDefinition);
         InterfaceType beanInterfaceType = (InterfaceType) getApplicationContext().getBean(beanName);
         return getTargetObject(beanInterfaceType);
@@ -108,11 +108,13 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return scanner.findCandidateComponents("*.*");
     }
 
-    private Boolean getIsResultAggregated(BeanDefinition beanDefinition) {
+    private Boolean getIsResultAggregated(final BeanDefinition beanDefinition) {
         return getAnnotationAttribute(beanDefinition, Discriminator.class, DiscriminatorInterface.IS_RESULT_AGGREGATED);
     }
 
-    private Boolean getAnnotationAttribute(BeanDefinition beanDefinition, Class clazz, String attribute) {
+    private Boolean getAnnotationAttribute(final BeanDefinition beanDefinition,
+                                           final Class clazz,
+                                           final String attribute) {
         AnnotationMetadata annotationMetadata = ((ScannedGenericBeanDefinition) beanDefinition).getMetadata();
         if (annotationMetadata != null) {
             Map<String, Object> annotationAttributes = annotationMetadata.getAnnotationAttributes(clazz.getName());
@@ -123,11 +125,11 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return null;
     }
 
-    private boolean isBeanAvailable(BeanDefinition beanDefinition) {
+    private boolean isBeanAvailable(final BeanDefinition beanDefinition) {
         return getBeanName(beanDefinition) != null;
     }
 
-    private String getBeanName(BeanDefinition beanDefinition) {
+    private String getBeanName(final BeanDefinition beanDefinition) {
         try {
             String[] names = getApplicationContext().getBeanNamesForType(
                     Class.forName(beanDefinition.getBeanClassName()));
@@ -144,7 +146,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return null;
     }
 
-    private String getBeanNameFromBeanDefinition(BeanDefinition beanDefinition) {
+    private String getBeanNameFromBeanDefinition(final BeanDefinition beanDefinition) {
         String beanClassName = beanDefinition.getBeanClassName();
         return Introspector.decapitalize(beanClassName.substring(beanClassName.lastIndexOf(".") + 1));
     }
@@ -153,7 +155,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return applicationContext;
     }
 
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 }

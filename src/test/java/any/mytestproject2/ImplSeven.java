@@ -39,7 +39,7 @@ public class ImplSeven implements CommonInterface {
 
     @Override
     public List<String> getList(WrappedParam param1) {
-        return new ArrayList<>();
+        return new ArrayList<String>();
     }
 
     @Override

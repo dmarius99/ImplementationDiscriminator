@@ -32,6 +32,9 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
      */
     private boolean active = true;
 
+    /**
+     * Default constructor that uses the 2 type parameters from class definition.
+     */
     DiscriminatorInitializer() {
         super();
         super.setDiscriminatorClass(getTypeArgumentClass(0));
@@ -64,20 +67,18 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
         return getBeanManager().getImplementationBeans();
     }
 
-    protected boolean isResultAggregated() {
+    boolean isResultAggregated() {
         return getBeanManager().isResultAggregated();
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }
 
+    @Override
     public void activate() {
         this.active = true;
-    }
-
-    public void deactivate() {
-        this.active = false;
     }
 
     BeanManager getBeanManager() {

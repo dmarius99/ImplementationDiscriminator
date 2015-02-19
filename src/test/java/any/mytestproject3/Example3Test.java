@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 public class Example3Test {
 
     @Inject
-    @Named(value = "longMathOperations")
+    @Named(value = "integerMathOperations")
     private MathOperations mathOperations;
 
     @Test(expected = RuntimeException.class)

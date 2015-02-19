@@ -1,35 +1,53 @@
 package com.dms;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
 
 import java.beans.Introspector;
-import java.util.Map;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 18/01/15.
  */
 @Configuration
 @EnableAspectJAutoProxy
-public class DiscriminatorConfiguration implements ApplicationContextAware {
+public class DiscriminatorConfiguration {
 
+    /**
+     * Spring ApplicationContext to be created in non Spring contexts.
+     */
     private static AbstractApplicationContext applicationContext;
-
+    /**
+     * The class implementing DiscriminatorInterface.
+     */
     private static Class<? extends DiscriminatorInterface> discriminatorClass;
+    /**
+     * Default implementation class.
+     */
+    private static Class defaultImplementation;
+    /**
+     * Other implementation class beside defaultImplementation.
+     * Should be at least one class.
+     */
+    private static Class[] implementations;
 
-    public static Object activateDiscriminator(Class<? extends DiscriminatorInterface> myDiscriminatorClass,
-                                             Class defaultImplementation) {
-        MethodsHelper.LOG.info("Initializing Spring context.");
+    /**
+     * Activates the @Discriminator for several implementations.
+     *
+     * @param myDiscriminatorClass the discriminator class
+     * @param myDefaultImplementation the default implementation
+     * @param myImplementations the other implementations
+     * @return the default implementation bean
+     */
+    public static Object activateDiscriminator(final Class<? extends DiscriminatorInterface> myDiscriminatorClass,
+                                               final Class myDefaultImplementation, final Class... myImplementations) {
         discriminatorClass = myDiscriminatorClass;
+        defaultImplementation = myDefaultImplementation;
+        implementations = myImplementations;
+        MethodsHelper.LOG.info("Initializing Spring context.");
         applicationContext = new AnnotationConfigApplicationContext();
         initBeans();
 
@@ -51,36 +69,33 @@ public class DiscriminatorConfiguration implements ApplicationContextAware {
      *
      */
     private static void initBeans() {
-        registerMyBean(DiscriminatorConfiguration.class, Introspector.decapitalize(DiscriminatorConfiguration.class.getSimpleName()));
-
+        initSpringWithAspectJ();
         initImplementations();
         initBeanManager();
         initDiscriminatorInterface();
         initDiscriminatorAspect();
     }
 
+    private static void initSpringWithAspectJ() {
+        registerMyBean(DiscriminatorConfiguration.class,
+                Introspector.decapitalize(DiscriminatorConfiguration.class.getSimpleName()));
+    }
+
 
     private static void initImplementations() {
-        DiscriminatorInterface discriminatorInterface = (DiscriminatorInterface) GenericBeanManager.createInstance(discriminatorClass);
-        Class interfaceClass = ((DiscriminatorInitializer) discriminatorInterface).getInterfaceClass();
-        BeanManager beanManager = new GenericBeanManager(interfaceClass);
-        Map<String,Object> implementationBeans = beanManager.getImplementationBeans();
-        for (Object implementationBean:implementationBeans.values()) {
-            Class implClass = implementationBean.getClass();
-            String beanName = Introspector.decapitalize(implClass.getSimpleName());
-            registerMyBean(implClass, beanName);
+        //default implementation
+        registerMyBean(defaultImplementation, Introspector.decapitalize(defaultImplementation.getSimpleName()));
+        //other implementations
+        for (Class implementationClass:implementations) {
+            String beanName = Introspector.decapitalize(implementationClass.getSimpleName());
+            registerMyBean(implementationClass, beanName);
         }
+        MethodsHelper.LOG.info("Found " + (implementations.length + 1) + " implementations for "
+            + discriminatorClass.getName());
     }
 
     private static void initBeanManager() {
-        BeanDefinition myBeanDefinition = getMyBeanDefinition(GenericBeanManager.class);
-        ConstructorArgumentValues constructor = myBeanDefinition.getConstructorArgumentValues();
-
-        DiscriminatorInterface discriminatorInterface = (DiscriminatorInterface) GenericBeanManager.createInstance(discriminatorClass);
-        Class interfaceClass = ((DiscriminatorInitializer) discriminatorInterface).getInterfaceClass();
-
-        constructor.addIndexedArgumentValue(0, interfaceClass);
-        registerMyBean(myBeanDefinition, Introspector.decapitalize(BeanManager.class.getSimpleName()));
+        registerMyBean(BeanManagerForSpring.class, Introspector.decapitalize(BeanManager.class.getSimpleName()));
     }
 
     private static void initDiscriminatorInterface() {
@@ -92,31 +107,19 @@ public class DiscriminatorConfiguration implements ApplicationContextAware {
         registerMyBean(myBeanDefinition, Introspector.decapitalize(DiscriminatorAspect.class.getSimpleName()));
     }
 
-    private static void registerMyBean(Class beanClass, String beanName) {
+    private static void registerMyBean(final Class beanClass, final String beanName) {
         BeanDefinition beanDefinition = getMyBeanDefinition(beanClass);
         registerMyBean(beanDefinition, beanName);
     }
 
-    private static BeanDefinition getMyBeanDefinition(Class beanClass) {
+    private static BeanDefinition getMyBeanDefinition(final Class beanClass) {
         BeanDefinition beanDefinition = new GenericBeanDefinition();
         beanDefinition.setBeanClassName(beanClass.getName());
         return beanDefinition;
     }
 
-    private static void registerMyBean(BeanDefinition beanDefinition, String beanName) {
+    private static void registerMyBean(final BeanDefinition beanDefinition, final String beanName) {
         ((AnnotationConfigApplicationContext)applicationContext).registerBeanDefinition(beanName, beanDefinition);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (applicationContext instanceof GenericApplicationContext) {
-            DiscriminatorConfiguration.applicationContext = (GenericApplicationContext) applicationContext;
-        } else {
-            if (applicationContext instanceof AnnotationConfigApplicationContext) {
-                DiscriminatorConfiguration.applicationContext = (AnnotationConfigApplicationContext) applicationContext;
-            } else {
-                throw new RuntimeException("Different ApplicationContext expected!");
-            }
-        }
-    }
 }

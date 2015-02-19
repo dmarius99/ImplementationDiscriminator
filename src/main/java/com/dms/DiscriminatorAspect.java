@@ -32,15 +32,16 @@ class DiscriminatorAspect {
     /**
      * Constructor with injected DiscriminatorInterface.
      * *
-     * @param discriminatorInterface the discriminator default implementation
+     * @param myDiscriminatorInterface the discriminator default implementation
      */
-    DiscriminatorAspect(DiscriminatorInterface discriminatorInterface) {
-        this.discriminatorInterface = discriminatorInterface;
+    DiscriminatorAspect(final DiscriminatorInterface myDiscriminatorInterface) {
+        this.discriminatorInterface = myDiscriminatorInterface;
     }
 
     /**
-     * This is Spring style Pointcut: @target(com.dms.Discriminator)
-     * This is AspectJ style Pointcut: execution(@com.dms.Discriminator * *(..))
+     * This is Spring style Pointcut: @target(com.dms.Discriminator).
+     * The other choice would have been using AspectJ style Pointcut:
+     *     execution(@com.dms.Discriminator * *(..))
      */
     @Pointcut("@target(com.dms.Discriminator)")
     public void getBeansAnnotatedWithDiscriminator() {

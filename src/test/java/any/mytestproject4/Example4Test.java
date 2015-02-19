@@ -22,15 +22,15 @@ public class Example4Test {
     private MathOperations mathOperations;
 
     @Before
-    public void init() {
+    public void init() throws InterruptedException {
         mathOperations = (MathOperations)DiscriminatorConfiguration.activateDiscriminator(
                 DiscriminatorExampleForNumbers.class,
-                IntegerMathOperations.class);
+                IntegerMathOperations.class, LongMathOperations.class);
     }
 
     @Test(expected = RuntimeException.class)
     public void testIntercepted() {
-        Number plus = mathOperations.plus(new AtomicInteger(Integer.MAX_VALUE), new AtomicInteger(Integer.MAX_VALUE));
+        mathOperations.plus(new AtomicInteger(Integer.MAX_VALUE), new AtomicInteger(Integer.MAX_VALUE));
     }
 
     @Test

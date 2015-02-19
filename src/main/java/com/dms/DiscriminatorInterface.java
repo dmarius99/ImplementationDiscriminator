@@ -43,9 +43,14 @@ interface DiscriminatorInterface<DiscriminatorType, InterfaceType>
      */
     Object defaultIntercept(ProceedingJoinPoint joinPoint) throws Throwable;
 
-    void activate();
-
-    void deactivate();
-
+    /**
+     *
+     * @return true if it was invoked/used, false otherwise.
+     */
     boolean isActive();
+
+    /**
+     * Marks the discriminator as active, that is was invoked.
+     */
+    void activate();
 }

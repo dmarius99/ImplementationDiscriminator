@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -47,8 +46,6 @@ public class PerformanceTest {
         final long activatedAnnotationTime = System.currentTimeMillis() - startMillis;
         LOG.info("Call with activated "+DiscriminatorInterface.ANNOTATION_NAME+" took " + activatedAnnotationTime + " ms");
 
-        discriminatorInterface.deactivate();
-        assertFalse(discriminatorInterface.isActive());
         final long startMillis2 = System.currentTimeMillis();
         for (int i = 0; i < NO_OF_CALLS; i++)
             commonInterface.show(new WrappedParam(i + 1L, "name1"));

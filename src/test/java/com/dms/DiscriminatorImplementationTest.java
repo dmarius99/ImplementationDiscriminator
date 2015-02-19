@@ -31,7 +31,7 @@ public class DiscriminatorImplementationTest {
         when(proceedingJoinPoint.getArgs()).thenReturn(new Object[0]);
         discriminatorImplementation.setBeanManager(beanManagerForSpring);
         when(beanManagerForSpring.isResultAggregated()).thenReturn(true);
-        assertTrue(discriminatorImplementation.isResultAggregated());
+        assertTrue(((DiscriminatorInitializer)discriminatorImplementation).isResultAggregated());
 
         Object result1 = discriminatorImplementation.defaultIntercept(proceedingJoinPoint);
         verify(proceedingJoinPoint).proceed();
