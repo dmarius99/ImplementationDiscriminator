@@ -9,15 +9,17 @@ public class DiscriminatorExampleForNumbers extends DiscriminatorImplementation<
 
     @Override
     public MathOperations getImplementationForDiscriminator(Number parameter) {
-        if (parameter.longValue() < Integer.MAX_VALUE) {
+        if (parameter.longValue() == Integer.MAX_VALUE) {
+            return null;
+        }
+        if (parameter.getClass().equals(Integer.class)) {
             return getImplementations().get(IntegerMathOperations.class.getName());
         } else {
-            if (parameter.longValue() > Integer.MAX_VALUE) {
+            if (parameter.getClass().equals(Long.class)) {
                 return getImplementations().get(LongMathOperations.class.getName());
-            } else {
-                return null;
             }
         }
+        return null;
     }
 
 }

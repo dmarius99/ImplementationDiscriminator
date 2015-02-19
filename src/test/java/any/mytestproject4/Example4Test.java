@@ -40,4 +40,14 @@ public class Example4Test {
         assertEquals(plus, new Long(2L + 2L * Integer.MAX_VALUE));
     }
 
+    @Test
+    public void testInterceptedOk2() {
+        Number plus = mathOperations.plus(new Integer(1), new Integer(2));
+        assertTrue(plus instanceof Integer);
+        assertEquals(plus, new Integer(3));
+
+        plus = mathOperations.plus(new Long(1), new Long(2));
+        assertTrue(plus instanceof Long);
+        assertEquals(plus, new Long(3));
+    }
 }
