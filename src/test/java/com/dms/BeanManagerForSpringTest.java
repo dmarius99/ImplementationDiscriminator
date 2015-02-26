@@ -31,14 +31,15 @@ public class BeanManagerForSpringTest {
 
     @Test
     public void testInitDependencies() throws Exception {
-        beanManagerForSpring.initDependencies();
+        beanManagerForSpring.init();
         assertEquals(beanManagerForSpring.getImplementationBeans().size(), 0);
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testGetImplementationBeans() throws Exception {
+        beanManagerForSpring.init();
+        assertEquals(beanManagerForSpring.getImplementationBeans().size(), 0);
         beanManagerForSpring.getImplementationBeans().put("1", new Object());
-        assertEquals(beanManagerForSpring.getImplementationBeans().size(), 1);
     }
 
     @Test

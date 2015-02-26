@@ -28,6 +28,13 @@ public class Example4Test {
                 IntegerMathOperations.class, LongMathOperations.class);
     }
 
+    @Test
+    public void testInit() {
+        DiscriminatorConfiguration d = new DiscriminatorConfiguration<MathOperations>();
+        d.discriminate();
+        d.discriminate(1, 2);
+    }
+
     @Test(expected = RuntimeException.class)
     public void testIntercepted() {
         mathOperations.plus(new AtomicInteger(Integer.MAX_VALUE), new AtomicInteger(Integer.MAX_VALUE));

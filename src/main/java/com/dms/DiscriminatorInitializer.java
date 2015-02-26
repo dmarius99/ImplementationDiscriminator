@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * DiscriminatorInitializer, 24.10.2014
@@ -63,7 +63,7 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
     }
 
     @Override
-    public Map<String, InterfaceType> getImplementations() {
+    public SortedMap<String, InterfaceType> getImplementations() {
         return getBeanManager().getImplementationBeans();
     }
 

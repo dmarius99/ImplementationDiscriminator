@@ -14,7 +14,7 @@ import java.beans.Introspector;
  */
 @Configuration
 @EnableAspectJAutoProxy
-public class DiscriminatorConfiguration {
+public class DiscriminatorConfiguration<InterfaceType> {
 
     /**
      * Spring ApplicationContext to be created in non Spring contexts.
@@ -58,6 +58,10 @@ public class DiscriminatorConfiguration {
         return applicationContext.getBean(beanName);
     }
 
+    public <T extends InterfaceType> void discriminate(T... implementations){
+
+    }
+
     /**
      * Initialization order of beans:
      *
@@ -91,7 +95,7 @@ public class DiscriminatorConfiguration {
             registerMyBean(implementationClass, beanName);
         }
         MethodsHelper.LOG.info("Found " + (implementations.length + 1) + " implementations for "
-            + discriminatorClass.getName());
+                + discriminatorClass.getName());
     }
 
     private static void initBeanManager() {

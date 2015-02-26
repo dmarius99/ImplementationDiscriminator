@@ -6,8 +6,8 @@ import any.mytestproject3.MathOperations;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -26,7 +26,7 @@ public class DiscriminatorInitializerTest {
         mockBeanManagerForSpring = mock(BeanManagerForSpring.class);
 
         MathOperations defaultImpl = new LongMathOperations();
-        Map<String, MathOperations> implementations = new HashMap<String, MathOperations>();
+        SortedMap<String, MathOperations> implementations = new TreeMap<String, MathOperations>();
         implementations.put(LongMathOperations.class.getName(), defaultImpl);
         discriminatorInitializer.setBeanManager(mockBeanManagerForSpring);
 
@@ -52,7 +52,6 @@ public class DiscriminatorInitializerTest {
     @Test
     public void testInitDependenciesWithOneImplementationAggregated() throws Exception {
         when(mockBeanManagerForSpring.isResultAggregated()).thenReturn(true);
-        mockBeanManagerForSpring.initDependencies();
         assertTrue(discriminatorInitializer.isResultAggregated());
     }
 
@@ -64,7 +63,7 @@ public class DiscriminatorInitializerTest {
     @Test(expected = RuntimeException.class)
     public void testValidateThrowsForImplementations() throws Exception {
         discriminatorInitializer.setBeanManager(mockBeanManagerForSpring);
-        when(mockBeanManagerForSpring.getImplementationBeans()).thenReturn(new HashMap());
+        when(mockBeanManagerForSpring.getImplementationBeans()).thenReturn(new TreeMap());
         discriminatorInitializer.validate();
     }
 

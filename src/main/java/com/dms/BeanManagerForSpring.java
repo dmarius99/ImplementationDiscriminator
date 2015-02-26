@@ -15,17 +15,17 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.beans.Introspector;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 23/12/14.
- */
-
-/**
  *
  * @param <InterfaceType> the class type of the interface implemented by the implementation beans
+ *                        that will be initialized after bean construction
  */
 @Named("beanManager")
 class BeanManagerForSpring<InterfaceType> implements BeanManager {
@@ -49,22 +49,28 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     /**
      * All implementations with @Discriminator annotation that implements InterfaceType.
      */
-    private final Map<String, InterfaceType> implementations = new HashMap<String, InterfaceType>();
+    private SortedMap<String, InterfaceType> implementations;
 
     @PostConstruct
-    void initDependencies() {
+    void init() {
+        implementations = Collections.unmodifiableSortedMap(getDependencies());
+    }
+
+    private SortedMap<String, InterfaceType> getDependencies() {
+        SortedMap<String, InterfaceType> initImplementations= new TreeMap<String, InterfaceType>();
         Set<BeanDefinition> scannedImplementations = getScannedImplementations();
         for (BeanDefinition bean : scannedImplementations) {
             if (isBeanAvailable(bean)) {
-                implementations.put(bean.getBeanClassName(), getImplementationBean(bean));
+                initImplementations.put(bean.getBeanClassName(), getImplementationBean(bean));
                 resultAggregated = isResultAggregated() || getIsResultAggregated(bean);
             }
         }
+        return initImplementations;
     }
 
     @SuppressWarnings({ "unchecked" })
     @Override
-    public Map<String, InterfaceType> getImplementationBeans() {
+    public SortedMap<String, InterfaceType> getImplementationBeans() {
         return implementations;
     }
 
