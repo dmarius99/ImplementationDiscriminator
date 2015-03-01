@@ -2,25 +2,39 @@ package com.dms;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.logging.Level;
+import java.util.SortedMap;
 
 /**
  * DiscriminatorInitializer, 24.10.2014
- * <p/>
+ *
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
  */
-abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extends MethodsHelper implements DiscriminatorInterface<DiscriminatorType, InterfaceType> {
 
+/**
+ *
+ * @param <DiscriminatorType> the class type of the parameter used in choosing the implementation
+ * @param <InterfaceType> the class type of the interface implemented by the implementation beans
+ */
+abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extends MethodsHelper
+        implements DiscriminatorInterface<DiscriminatorType, InterfaceType> {
+
+    /**
+     * Interface BeanManager is implemented for Spring container.
+     */
     @Inject
-    @Named("beanManager")
     private BeanManager beanManager;
 
+    /**
+     * Default active value for the discriminator usage is true.
+     * If the class gets initialized then I suppose it is enabled.
+     */
     private boolean active = true;
 
+    /**
+     * Default constructor that uses the 2 type parameters from class definition.
+     */
     DiscriminatorInitializer() {
         super();
         super.setDiscriminatorClass(getTypeArgumentClass(0));
@@ -29,52 +43,27 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
     }
 
     /**
-     * Validates this bean instance in run time by checking that the required fields are not null
+     * Validates this bean instance in run time by checking that the required fields are not null.
      */
     @PostConstruct
     protected void validate() {
-        LOG.info("Validating @Discriminator usage");
-        if (getDefaultImplementation() == null) {
-            throwError(new IllegalStateException("No default implementation specified"));
-        }
+        LOG.info("Validating " + ANNOTATION_NAME + " usage");
         if (getImplementations() == null || getImplementations().size() == 0) {
             throwError(new IllegalStateException("No implementations specified"));
         }
     }
 
     /**
-     * Throws an RuntimeException.
-     *
-     * @param t Exception
-     */
-    void throwError(Throwable t) {
-        LOG.log(Level.SEVERE, "Critical error in DiscriminatorImplementation: ", t);
-        throw new RuntimeException("Critical error in DiscriminatorImplementation: ", t);
-    }
-
-    /**
      * @param typeArgumentIndex the argument position
      * @return the argument class type
      */
-    private Class getTypeArgumentClass(int typeArgumentIndex) throws ClassCastException {
+    private Class getTypeArgumentClass(final int typeArgumentIndex) {
         Type type = getClass().getGenericSuperclass();
-        if (!(type instanceof ParameterizedType)) {
-            type = ((Class) type).getGenericSuperclass();
-        }
-        if (type instanceof ParameterizedType) {
-            return (Class) ((ParameterizedType) type).getActualTypeArguments()[typeArgumentIndex];
-        } else {
-            throwError(new RuntimeException("Wrong proxy configuration or usage for Parametrized types"));
-        }
-        return null;
-    }
-
-    InterfaceType getDefaultImplementation() {
-        return (InterfaceType) getBeanManager().getDefaultImplementationBean();
+        return (Class) ((ParameterizedType) type).getActualTypeArguments()[typeArgumentIndex];
     }
 
     @Override
-    public Map<String, InterfaceType> getImplementations() {
+    public SortedMap<String, InterfaceType> getImplementations() {
         return getBeanManager().getImplementationBeans();
     }
 
@@ -82,23 +71,21 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
         return getBeanManager().isResultAggregated();
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }
 
+    @Override
     public void activate() {
         this.active = true;
-    }
-
-    public void deactivate() {
-        this.active = false;
     }
 
     BeanManager getBeanManager() {
         return beanManager;
     }
 
-    protected void setBeanManager(BeanManager beanManager) {
+    protected void setBeanManager(final BeanManager beanManager) {
         this.beanManager = beanManager;
     }
 }

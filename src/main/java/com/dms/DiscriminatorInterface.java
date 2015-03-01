@@ -4,16 +4,37 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 /**
  * DiscriminatorInterface, 23.10.2014
- * <p/>
+ *
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
  */
 
-interface DiscriminatorInterface<DiscriminatorType, InterfaceType> extends Discriminate<DiscriminatorType, InterfaceType> {
+/**
+ *
+ * @param <DiscriminatorType> the class type of the parameter used in choosing the implementation
+ * @param <InterfaceType> the class type of the interface implemented by the implementation beans
+ */
+interface DiscriminatorInterface<DiscriminatorType, InterfaceType>
+        extends Discriminate<DiscriminatorType, InterfaceType> {
 
-    static final String ANNOTATION_NAME = "@Discriminator";
-    static final String IS_DEFAULT = "isDefault";
-    static final String IS_RESULT_AGGREGATED = "isResultAggregated";
-    static final String BASE_PACKAGE = "com.dms";
+    /**
+     * The annotation full name.
+     */
+    String ANNOTATION_NAME = "@Discriminator";
+
+    /**
+     * The method name in the annotation for setting the aggregation flag.
+     */
+    String IS_RESULT_AGGREGATED = "isResultAggregated";
+
+    /**
+     * The method name to discriminate execution.
+     */
+    String DISCRIMINATE_EXECUTION_POINT = "discriminateExecutionPoint";
+
+    /**
+     * The default package name for this project.
+     */
+    String BASE_PACKAGE = "com.dms";
 
     /**
      * @param joinPoint the ProceedingJoinPoint
@@ -22,9 +43,14 @@ interface DiscriminatorInterface<DiscriminatorType, InterfaceType> extends Discr
      */
     Object defaultIntercept(ProceedingJoinPoint joinPoint) throws Throwable;
 
-    void activate();
-
-    void deactivate();
-
+    /**
+     *
+     * @return true if it was invoked/used, false otherwise.
+     */
     boolean isActive();
+
+    /**
+     * Marks the discriminator as active, that is was invoked.
+     */
+    void activate();
 }

@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by Marius on 27/09/14.
  */
 @Named
-@Discriminator(isDefault = true, isResultAggregated = false)
+@Discriminator(isResultAggregated = false)
 public class ImplOne implements CommonInterface {
 
     public static final String MSG = "Show message from ImplOne... 111";
@@ -36,8 +36,8 @@ public class ImplOne implements CommonInterface {
     public List<String> getList(WrappedParam param1) {
         System.out.println(MSG);
         List<String> myList = new ArrayList<String>();
-        myList.add(MSG+"-1");
-        myList.add(MSG+"-11");
+        myList.add(MSG + "-1");
+        myList.add(MSG + "-11");
         return myList;
     }
 

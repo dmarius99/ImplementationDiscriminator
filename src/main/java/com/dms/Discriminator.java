@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 
 /**
  * Discriminator, 17.10.2014
- * <p/>
+ *
  * Identifies implementations that can be managed dynamically using a discriminator parameter.
- * <p/>
+ *
  * Copyright marius.dinu@gmail.com. All rights reserved.
  */
 @Target(ElementType.TYPE)
@@ -20,8 +20,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Discriminator {
 
-    boolean isDefault() default false;
-
+    /**
+     * @return true if methods that return Collection should be aggregated/combined, false otherwise.
+     */
     boolean isResultAggregated() default false;
 
 }

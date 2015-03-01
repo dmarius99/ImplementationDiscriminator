@@ -4,60 +4,84 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 27/09/14.
  */
-class MethodsHelper {
+class MethodsHelper implements MethodsHelperOverrideCapabilities {
+
+    /**
+     * The Logger for this annotation usage and initialization.
+     */
 
     static final Logger LOG = Logger.getAnonymousLogger();
 
+    /**
+     * The class type of the interface implemented by the implementation beans.
+     */
+
     private Class interfaceClass;
 
+    /**
+     * The class type of the parameter used in choosing the implementation.
+     */
     private Class discriminatorClass;
 
     /**
-     * This type of methods should return the result from only one of the implementations
+     * This type of methods should return the result from only one of the implementations.
      */
-    private Set<Method> methodsNotToBeIntercepted = new HashSet<Method>();
+    private final Set<Method> methodsNotToBeIntercepted = new HashSet<Method>();
 
     /**
      * This type of methods should return the same result for any implementation.
      * Use only methods that return instances of Collection.
      */
-    private Set<Method> methodsToBeAggregated = new HashSet<Method>();
+    private final Set<Method> methodsToBeAggregated = new HashSet<Method>();
 
     /**
-     * Methods that will be intercepted by the aspect in order to be discriminated
+     * Methods that will be intercepted by the aspect in order to be discriminated.
      */
-    private Set<Method> methodsToBeIntercepted = new HashSet<Method>();
+    private final Set<Method> methodsToBeIntercepted = new HashSet<Method>();
 
-
+    /**
+     * The set of aggregated methods to be overridden by user.
+     */
     private Set<String> aggregatedMethods = null;
 
+    /**
+     * The set of un-intercepted methods to be overridden by user.
+     */
     private Set<String> unInterceptedMethods = null;
 
+    /**
+     * The set of intercepted methods to be overridden by user.
+     */
     private Set<String> interceptedMethods = null;
 
     /**
      * @param myInterfaceClass     the interface class
      * @param myDiscriminatorClass the discriminator class
      */
-    MethodsHelper(Class myInterfaceClass, Class myDiscriminatorClass) {
+    MethodsHelper(final Class myInterfaceClass, final Class myDiscriminatorClass) {
         this.setInterfaceClass(myInterfaceClass);
         this.setDiscriminatorClass(myDiscriminatorClass);
         init();
     }
 
+    /**
+     * Default constructor for MethodsHelper.
+     */
     MethodsHelper() {
+        LOG.info("Loading methods...");
     }
 
     Class getDiscriminatorClass() {
         return discriminatorClass;
     }
 
-    void setDiscriminatorClass(Class discriminatorClass) {
+    void setDiscriminatorClass(final Class discriminatorClass) {
         this.discriminatorClass = discriminatorClass;
     }
 
@@ -65,72 +89,58 @@ class MethodsHelper {
         return interfaceClass;
     }
 
-    void setInterfaceClass(Class interfaceClass) {
+    void setInterfaceClass(final Class interfaceClass) {
         this.interfaceClass = interfaceClass;
     }
 
-    Set<Method> getMethodsNotToBeIntercepted() {
-        return methodsNotToBeIntercepted;
-    }
-
-    void setMethodsNotToBeIntercepted(Set<Method> methodsNotToBeIntercepted) {
-        this.methodsNotToBeIntercepted = methodsNotToBeIntercepted;
-    }
-
-    Set<Method> getMethodsToBeAggregated() {
-        return methodsToBeAggregated;
-    }
-
-    void setMethodsToBeAggregated(Set<Method> methodsToBeAggregated) {
-        this.methodsToBeAggregated = methodsToBeAggregated;
-    }
-
+    @Override
     public Set<String> getAggregatedMethods() {
-        if (aggregatedMethods == null) {
-            aggregatedMethods = new HashSet<String>();
-            for (Method method : methodsToBeAggregated) {
-                aggregatedMethods.add(method.getName());
-            }
-        }
-        return aggregatedMethods;
+        return getMethods(aggregatedMethods, methodsToBeAggregated);
     }
 
-    public void setAggregatedMethods(Set<String> aggregatedMethods) {
+    final void setAggregatedMethods(final Set<String> aggregatedMethods) {
         this.aggregatedMethods = aggregatedMethods;
     }
 
+    @Override
     public Set<String> getUnInterceptedMethods() {
-        if (unInterceptedMethods == null) {
-            unInterceptedMethods = new HashSet<String>();
-            for (Method method : methodsNotToBeIntercepted) {
-                unInterceptedMethods.add(method.getName());
-            }
-        }
-        return unInterceptedMethods;
+        return getMethods(unInterceptedMethods, methodsNotToBeIntercepted);
     }
 
-    public void setUnInterceptedMethods(Set<String> unInterceptedMethods) {
+    final void setUnInterceptedMethods(final Set<String> unInterceptedMethods) {
         this.unInterceptedMethods = unInterceptedMethods;
     }
 
+    @Override
+    public Set<String> getInterceptedMethods() {
+        return getMethods(interceptedMethods, methodsToBeIntercepted);
+    }
+
+    final void setInterceptedMethods(final Set<String> interceptedMethods) {
+        this.interceptedMethods = interceptedMethods;
+    }
+
+    Set<String> getMethods(Set<String> methodsAsStrings, Set<Method> methodsAsObjects) {
+        if (methodsAsStrings == null) {
+            methodsAsStrings = new HashSet<String>();
+            for (Method method : methodsAsObjects) {
+                if (!methodsAsStrings.add(method.getName())) {
+                    throwMethodsNotUnique(method.getName());
+                }
+            }
+        }
+        return methodsAsStrings;
+    }
+
     /**
-     * Initializes 3 sets on methods(interceptedMethods, unInterceptedMethods, aggregatedMethods)
+     * Initializes 3 sets on methods(interceptedMethods, unInterceptedMethods, aggregatedMethods).
      */
     private void initMethodsByRole() {
-        Method methods[] = getInterfaceClass().getDeclaredMethods();
+        Method[] methods = getInterfaceClass().getDeclaredMethods();
 
         for (Method method : methods) {
-            Class<?>[] parameterTypes = method.getParameterTypes();
-            if (parameterTypes != null) {
-                if (shouldMethodBeIntercepted(parameterTypes)) {
-                    methodsToBeIntercepted.add(method);
-                } else {
-                    if (shouldMethodBeAggregated(method)) {
-                        methodsToBeAggregated.add(method);
-                    } else {
-                        methodsNotToBeIntercepted.add(method);
-                    }
-                }
+            if (shouldMethodBeIntercepted(method)) {
+                methodsToBeIntercepted.add(method);
             } else {
                 if (shouldMethodBeAggregated(method)) {
                     methodsToBeAggregated.add(method);
@@ -141,29 +151,38 @@ class MethodsHelper {
         }
     }
 
-    private boolean shouldMethodBeIntercepted(Class<?>[] parameterTypes) {
-        boolean isIntercepted = false;
-        for (Class clazz : parameterTypes) {
+    @SuppressWarnings({ "unchecked" })
+    boolean shouldMethodBeIntercepted(final Method method) {
+        if (method == null || method.getParameterTypes() == null || method.getParameterTypes().length == 0) {
+            return false;
+        }
+        for (Class clazz : method.getParameterTypes()) {
             if (getDiscriminatorClass().isAssignableFrom(clazz)) {
-                isIntercepted = true;
+                return true;
             }
         }
-        return isIntercepted;
+        return false;
     }
 
-    @SuppressWarnings( { "unchecked" } )
-    private boolean shouldMethodBeAggregated(Method method) {
+    @SuppressWarnings({ "unchecked" })
+    boolean shouldMethodBeAggregated(final Method method) {
         return Collection.class.isAssignableFrom(method.getReturnType());
     }
 
     /**
-     * Initializes the method sets
+     * Initializes the 3 method type sets(aggregated, intercepted and not-intercepted).
      */
     void init() {
         initMethodsByRole();
+        setInterceptedMethods(getMethods(interceptedMethods, methodsToBeIntercepted));
+        setUnInterceptedMethods(getMethods(unInterceptedMethods, methodsNotToBeIntercepted));
+        setAggregatedMethods(getMethods(aggregatedMethods, methodsToBeAggregated));
         logInitialization();
     }
 
+    /**
+     * Lists the methods to discriminate on.
+     */
     private void logInitialization() {
         LOG.info("******************************************");
         LOG.info("Methods to be intercepted " + methodsToBeIntercepted.size() + ": ");
@@ -183,17 +202,21 @@ class MethodsHelper {
         LOG.info("******************************************");
     }
 
-    public Set<String> getInterceptedMethods() {
-        if (interceptedMethods == null) {
-            interceptedMethods = new HashSet<String>();
-            for (Method method : methodsToBeIntercepted) {
-                interceptedMethods.add(method.getName());
-            }
-        }
-        return interceptedMethods;
+    /**
+     * Throws an RuntimeException.
+     *
+     * @param throwable Exception
+     */
+    void throwError(final Throwable throwable) {
+        LOG.log(Level.SEVERE, "Critical error in DiscriminatorImplementation: ", throwable);
+        throw new RuntimeException("Critical error in DiscriminatorImplementation: ", throwable);
     }
 
-    public void setInterceptedMethods(Set<String> interceptedMethods) {
-        this.interceptedMethods = interceptedMethods;
+    /**
+     * Throws a RuntimeException for method not unique.
+     * @param methodName the duplicated method name
+     */
+    void throwMethodsNotUnique(final String methodName) {
+        throw new RuntimeException("Method name not unique: " + methodName);
     }
 }

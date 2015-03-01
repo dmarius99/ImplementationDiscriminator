@@ -36,8 +36,8 @@ public class ImplFour implements CommonInterface {
     public List<String> getList(WrappedParam param1) {
         //System.out.println(MSG);
         List<String> myList = new ArrayList<String>();
-        myList.add(MSG+"-2");
-        myList.add(MSG+"-22");
+        myList.add(MSG + "-2");
+        myList.add(MSG + "-22");
         return myList;
     }
 

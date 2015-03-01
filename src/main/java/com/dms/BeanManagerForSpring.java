@@ -1,7 +1,6 @@
 package com.dms;
 
 import org.springframework.aop.framework.Advised;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -16,74 +15,90 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.beans.Introspector;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 23/12/14.
+ *
+ * @param <InterfaceType> the class type of the interface implemented by the implementation beans
+ *                        that will be initialized after bean construction
  */
 @Named("beanManager")
 class BeanManagerForSpring<InterfaceType> implements BeanManager {
 
+    /**
+     * The ClassLoader on which the implementation beans are searched for.
+     */
     private static final ClassLoader CLASS_LOADER = BeanManagerForSpring.class.getClassLoader();
 
+    /**
+     * The Spring ApplicationContext to be injected in Spring container.
+     */
     @Inject
     private ApplicationContext applicationContext;
 
-    private boolean resultAggregated;
+    /**
+     * The Aggregation flag for methods that return Collection.
+     */
+    private boolean resultAggregated = false;
 
-    private InterfaceType defaultImplementation;
-
-    private Map<String, InterfaceType> implementations = new HashMap<String, InterfaceType>();
+    /**
+     * All implementations with @Discriminator annotation that implements InterfaceType.
+     */
+    private SortedMap<String, InterfaceType> implementations;
 
     @PostConstruct
-    void initDependencies() {
+    void init() {
+        implementations = Collections.unmodifiableSortedMap(getDependencies());
+    }
+
+    private SortedMap<String, InterfaceType> getDependencies() {
+        SortedMap<String, InterfaceType> initImplementations= new TreeMap<String, InterfaceType>();
         Set<BeanDefinition> scannedImplementations = getScannedImplementations();
         for (BeanDefinition bean : scannedImplementations) {
             if (isBeanAvailable(bean)) {
-                implementations.put(bean.getBeanClassName(), getImplementationBean(bean));
-                boolean isDefault = getIsDefault(bean);
-
-                if (isDefault) {
-                    if (getDefaultImplementationBean() == null) {
-                        this.defaultImplementation = getImplementationBean(bean);
-                    } else {
-                        throw new IllegalArgumentException(
-                                "Duplicate " + DiscriminatorInterface.ANNOTATION_NAME + "." + DiscriminatorInterface.IS_DEFAULT + " annotation usage");
-                    }
-                    this.resultAggregated = getIsResultAggregated(bean);
-                }
+                initImplementations.put(bean.getBeanClassName(), getImplementationBean(bean));
+                resultAggregated = isResultAggregated() || getIsResultAggregated(bean);
             }
         }
+        return initImplementations;
     }
 
+    @SuppressWarnings({ "unchecked" })
     @Override
-    public Map<String, InterfaceType> getImplementationBeans() {
+    public SortedMap<String, InterfaceType> getImplementationBeans() {
         return implementations;
     }
 
-    @Override
-    public InterfaceType getDefaultImplementationBean() {
-        return defaultImplementation;
+    /**
+     *
+     * @param proxy one implementation of the interface (reference to a proxy)
+     * @param <InterfaceType> the interface of the implementations
+     * @return the target implementation behind the proxy
+     */
+    @SuppressWarnings({ "unchecked" })
+    <InterfaceType> InterfaceType getTargetObject(final InterfaceType proxy) {
+        try {
+            return (InterfaceType) ((Advised) proxy).getTargetSource().getTarget();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private InterfaceType getImplementationBean(final BeanDefinition beanDefinition) {
+        String beanName = getBeanName(beanDefinition);
+        InterfaceType beanInterfaceType = (InterfaceType) getApplicationContext().getBean(beanName);
+        return getTargetObject(beanInterfaceType);
     }
 
     @Override
     public boolean isResultAggregated() {
         return resultAggregated;
-    }
-
-    @Override
-    @SuppressWarnings( { "unchecked" } )
-    public <InterfaceType> InterfaceType getTargetObject(InterfaceType proxy) {
-        if (AopUtils.isJdkDynamicProxy(proxy)) {
-            try {
-                return (InterfaceType) ((Advised) proxy).getTargetSource().getTarget();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return proxy;
     }
 
     Set<BeanDefinition> getScannedImplementations() {
@@ -99,37 +114,31 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return scanner.findCandidateComponents("*.*");
     }
 
-    private InterfaceType getImplementationBean(BeanDefinition beanDefinition) {
-        String beanName = getBeanName(beanDefinition);
-        InterfaceType beanInterfaceType = (InterfaceType) getApplicationContext().getBean(beanName);
-        return getTargetObject(beanInterfaceType);
-    }
-
-    private Boolean getIsResultAggregated(BeanDefinition beanDefinition) {
+    private Boolean getIsResultAggregated(final BeanDefinition beanDefinition) {
         return getAnnotationAttribute(beanDefinition, Discriminator.class, DiscriminatorInterface.IS_RESULT_AGGREGATED);
     }
 
-    private Boolean getIsDefault(BeanDefinition beanDefinition) {
-        return getAnnotationAttribute(beanDefinition, Discriminator.class, DiscriminatorInterface.IS_DEFAULT);
-    }
-
-    private Boolean getAnnotationAttribute(BeanDefinition beanDefinition, Class clazz, String attribute) {
+    private Boolean getAnnotationAttribute(final BeanDefinition beanDefinition,
+                                           final Class clazz,
+                                           final String attribute) {
         AnnotationMetadata annotationMetadata = ((ScannedGenericBeanDefinition) beanDefinition).getMetadata();
         if (annotationMetadata != null) {
             Map<String, Object> annotationAttributes = annotationMetadata.getAnnotationAttributes(clazz.getName());
-            if (annotationAttributes != null)
+            if (annotationAttributes != null) {
                 return (Boolean) annotationAttributes.get(attribute);
+            }
         }
-        return false;
+        return null;
     }
 
-    private boolean isBeanAvailable(BeanDefinition beanDefinition) {
+    private boolean isBeanAvailable(final BeanDefinition beanDefinition) {
         return getBeanName(beanDefinition) != null;
     }
 
-    private String getBeanName(BeanDefinition beanDefinition) {
+    private String getBeanName(final BeanDefinition beanDefinition) {
         try {
-            String names[] = getApplicationContext().getBeanNamesForType(Class.forName(beanDefinition.getBeanClassName()));
+            String[] names = getApplicationContext().getBeanNamesForType(
+                    Class.forName(beanDefinition.getBeanClassName()));
             if (names != null && names.length == 1) {
                 return names[0];
             }
@@ -143,7 +152,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return null;
     }
 
-    private String getBeanNameFromBeanDefinition(BeanDefinition beanDefinition) {
+    private String getBeanNameFromBeanDefinition(final BeanDefinition beanDefinition) {
         String beanClassName = beanDefinition.getBeanClassName();
         return Introspector.decapitalize(beanClassName.substring(beanClassName.lastIndexOf(".") + 1));
     }
@@ -152,7 +161,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         return applicationContext;
     }
 
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 }

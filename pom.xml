@@ -22,24 +22,39 @@
     </licenses>
 
     <scm>
-        <connection></connection>
-        <developerConnection></developerConnection>
-        <url></url>
+        <url>https://github.com/dmarius99/ImplementationDiscriminator</url>
+        <connection>scm:git:git://github.com/dmarius99/ImplementationDiscriminator.git</connection>
+        <developerConnection>scm:git:git@github.com:dmarius99/ImplementationDiscriminator.git</developerConnection>
     </scm>
 
     <issueManagement>
-        <system></system>
-        <url></url>
+        <url>https://github.com/dmarius99/ImplementationDiscriminator/issues</url>
+        <system>GitHub Issues</system>
     </issueManagement>
 
     <developers>
         <developer>
-            <id>mariusdinu</id>
+            <id>dmarius99</id>
             <name>Dinu Marius</name>
             <email>marius.dinu@gmail.com</email>
             <timezone>+2</timezone>
         </developer>
     </developers>
+
+    <properties>
+        <!-- Application settings -->
+        <copyright.year>2014</copyright.year>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Production dependency versions -->
+        <spring.version>3.2.1.RELEASE</spring.version>
+
+        <!-- Testing dependency versions -->
+        <junit.version>4.8.1</junit.version>
+        <mockito.version>1.9.5</mockito.version>
+        <aspectj.version>1.8.2</aspectj.version>
+        <java.source-target.version>1.7</java.source-target.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -48,9 +63,49 @@
             <version>1</version>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm-all</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -67,82 +122,42 @@
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-        </dependency>
-        <dependency>
-            <groupId>jmock</groupId>
-            <artifactId>jmock</artifactId>
-            <version>${jmock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <reporting>
         <plugins>
             <plugin>
-                <artifactId>maven-changes-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.13</version>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.0.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.7.2</version>
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>3.2</version>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-report-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>2.3.1</version>
             </plugin>
         </plugins>
     </reporting>
-
-    <properties>
-        <!-- Application settings -->
-        <copyright.year>2014</copyright.year>
-
-        <spring.version>2.0.6</spring.version>
-
-        <!-- Testing dependency versions -->
-        <jmock.version>1.1.0</jmock.version>
-        <junit.version>4.8.1</junit.version>
-
-        <aspectj.version>1.7.2</aspectj.version>
-        <spring.version>3.2.1.RELEASE</spring.version>
-    </properties>
 
     <build>
         <plugins>
@@ -151,15 +166,22 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${java.source-target.version}</source>
+                    <target>${java.source-target.version}</target>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.13</version>
+                <configuration>
+                    <configLocation>${basedir}/checkstyle.xml</configLocation>
+                    <suppressionsLocation>${basedir}/checkstyle-suppressions.xml</suppressionsLocation>
+                    <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

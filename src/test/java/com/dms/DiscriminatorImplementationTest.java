@@ -5,10 +5,12 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.junit.Test;
 import org.mockito.internal.verification.Times;
+import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
@@ -16,23 +18,27 @@ import static org.mockito.Mockito.*;
  */
 public class DiscriminatorImplementationTest {
 
-    public static final String DISCRIMINATE_EXECUTION_POINT = "discriminateExecutionPoint";
-
     @Test
     public void testDefaultIntercept() throws Throwable {
+        ProceedingJoinPoint proceedingJoinPoint = mock(MethodInvocationProceedingJoinPoint.class);
+
         DiscriminatorExampleForNumbers discriminatorImplementation = new DiscriminatorExampleForNumbers();
-        ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+        when(proceedingJoinPoint.proceed()).thenReturn(mock(Object.class));
         Signature signature = mock(Signature.class);
         BeanManagerForSpring beanManagerForSpring = mock(BeanManagerForSpring.class);
+
         when(proceedingJoinPoint.getSignature()).thenReturn(signature);
         when(proceedingJoinPoint.getArgs()).thenReturn(new Object[0]);
         discriminatorImplementation.setBeanManager(beanManagerForSpring);
         when(beanManagerForSpring.isResultAggregated()).thenReturn(true);
+        assertTrue(((DiscriminatorInitializer)discriminatorImplementation).isResultAggregated());
 
         Object result1 = discriminatorImplementation.defaultIntercept(proceedingJoinPoint);
         verify(proceedingJoinPoint).proceed();
 
-        Method method = DiscriminatorImplementation.class.getDeclaredMethod(DISCRIMINATE_EXECUTION_POINT, ProceedingJoinPoint.class);
+        Method method = DiscriminatorImplementation.class.getDeclaredMethod(
+                DiscriminatorInterface.DISCRIMINATE_EXECUTION_POINT,
+                ProceedingJoinPoint.class);
         method.setAccessible(true);
         Object result2 = method.invoke(discriminatorImplementation, proceedingJoinPoint);
         verify(proceedingJoinPoint, new Times(2)).proceed();

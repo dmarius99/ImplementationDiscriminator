@@ -14,15 +14,15 @@ import java.util.Set;
  * Created by Marius on 27/09/14.
  */
 @Named
-@Discriminator(isDefault = true, isResultAggregated = true)
+@Discriminator(isResultAggregated = true)
 public class ImplThree implements CommonInterface {
 
     public static final String MSG = "Show message from ImplThree... 333";
 
     public void show(WrappedParam param1) {
-        int a=0;
+        int a = 0;
         a++;
-        for (int i = 0; i<1000; i++) {
+        for (int i = 0; i < 1000; i++) {
             a = a + i;
         }
     }
@@ -40,8 +40,8 @@ public class ImplThree implements CommonInterface {
     public List<String> getList(WrappedParam param1) {
         System.out.println(MSG);
         List<String> myList = new ArrayList<String>();
-        myList.add(MSG+"-1");
-        myList.add(MSG+"-11");
+        myList.add(MSG + "-1");
+        myList.add(MSG + "-11");
         return myList;
     }
 

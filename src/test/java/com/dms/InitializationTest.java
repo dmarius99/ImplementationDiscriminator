@@ -13,14 +13,12 @@ import static org.junit.Assert.assertTrue;
  */
 public class InitializationTest {
 
-    private CommonInterface commonInterface;
-
     @Test
     public void testInit() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.scan("com.dms", "any.mytestproject");
+        context.scan(DiscriminatorInterface.BASE_PACKAGE, "any.mytestproject");
         context.refresh();
-        commonInterface = (CommonInterface) context.getBean("implOne");
+        CommonInterface commonInterface = (CommonInterface) context.getBean("implOne");
         String nameFromImplTwoRunOnImplOne = commonInterface.getText1(new WrappedParam(1001L, "name2"), 2);
         assertTrue(nameFromImplTwoRunOnImplOne.equalsIgnoreCase(ImplTwo.MSG));
     }
