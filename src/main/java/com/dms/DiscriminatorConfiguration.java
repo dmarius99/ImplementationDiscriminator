@@ -14,7 +14,7 @@ import java.beans.Introspector;
  */
 @Configuration
 @EnableAspectJAutoProxy
-public class DiscriminatorConfiguration<InterfaceType> {
+public class DiscriminatorConfiguration<DiscriminatorType, InterfaceType> {
 
     /**
      * Spring ApplicationContext to be created in non Spring contexts.
@@ -34,6 +34,9 @@ public class DiscriminatorConfiguration<InterfaceType> {
      */
     private static Class[] implementations;
 
+    private static Class discriminatorType;
+    private static Class interfaceType;
+
     /**
      * Activates the @Discriminator for several implementations.
      *
@@ -42,8 +45,8 @@ public class DiscriminatorConfiguration<InterfaceType> {
      * @param myImplementations the other implementations
      * @return the default implementation bean
      */
-    public static Object activateDiscriminator(final Class<? extends DiscriminatorInterface> myDiscriminatorClass,
-                                               final Class myDefaultImplementation, final Class... myImplementations) {
+    public static Object discriminateUsing(final Class<? extends DiscriminatorInterface> myDiscriminatorClass,
+                                           final Class myDefaultImplementation, final Class... myImplementations) {
         discriminatorClass = myDiscriminatorClass;
         defaultImplementation = myDefaultImplementation;
         implementations = myImplementations;
@@ -58,8 +61,18 @@ public class DiscriminatorConfiguration<InterfaceType> {
         return applicationContext.getBean(beanName);
     }
 
-    public <T extends InterfaceType> void discriminate(T... implementations){
+    public Object discriminateDefault(final Class myDiscriminatorType,
+                                      final Class myInterfaceType,
+                                      final Class myDefaultImplementation,
+                                      final Class... myImplementations) {
+        this.discriminatorType = myDiscriminatorType;
+        this.interfaceType = myInterfaceType;
 
+        DiscriminatorImplementation<DiscriminatorType, InterfaceType> discriminatorImplementation = new DiscriminatorImplementation<DiscriminatorType, InterfaceType>(
+                discriminatorType,
+                interfaceType
+        );
+        return discriminateUsing(discriminatorImplementation.getClass(), myDefaultImplementation, myImplementations);
     }
 
     /**
@@ -103,7 +116,10 @@ public class DiscriminatorConfiguration<InterfaceType> {
     }
 
     private static void initDiscriminatorInterface() {
-        registerMyBean(discriminatorClass, Introspector.decapitalize(DiscriminatorInterface.class.getSimpleName()));
+        BeanDefinition myBeanDefinition = getMyBeanDefinition(discriminatorClass);
+        myBeanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(0, discriminatorType);
+        myBeanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(1, interfaceType);
+        registerMyBean(myBeanDefinition, Introspector.decapitalize(DiscriminatorInterface.class.getSimpleName()));
     }
 
     private static void initDiscriminatorAspect() {

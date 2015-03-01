@@ -33,6 +33,18 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
     private boolean active = true;
 
     /**
+     *
+     * @param discriminatorClass discriminator class of generic type DiscriminatorType
+     * @param interfaceClass interfaceClass of generic type InterfaceType
+     */
+    DiscriminatorInitializer(Class discriminatorClass, Class interfaceClass) {
+        super();
+        super.setDiscriminatorClass(discriminatorClass);
+        super.setInterfaceClass(interfaceClass);
+        super.init();
+    }
+
+    /**
      * Default constructor that uses the 2 type parameters from class definition.
      */
     DiscriminatorInitializer() {
@@ -58,8 +70,17 @@ abstract class DiscriminatorInitializer<DiscriminatorType, InterfaceType> extend
      * @return the argument class type
      */
     private Class getTypeArgumentClass(final int typeArgumentIndex) {
-        Type type = getClass().getGenericSuperclass();
+        return getTypeArgumentForClass(getClass(), typeArgumentIndex);
+    }
+
+    private Class getTypeArgumentForClass(final Class clazz, final int typeArgumentIndex) {
+        Type type = clazz.getGenericSuperclass();
         return (Class) ((ParameterizedType) type).getActualTypeArguments()[typeArgumentIndex];
+    }
+
+    protected static Class getTypeArgumentForImplementationClass(final Class implementationClass, final int typeArgumentIndex) {
+        Type[] types = implementationClass.getGenericInterfaces();
+        return (Class) ((ParameterizedType) types[typeArgumentIndex]).getActualTypeArguments()[typeArgumentIndex];
     }
 
     @Override

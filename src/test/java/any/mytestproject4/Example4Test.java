@@ -23,16 +23,14 @@ public class Example4Test {
 
     @Before
     public void init() throws InterruptedException {
-        mathOperations = (MathOperations)DiscriminatorConfiguration.activateDiscriminator(
-                DiscriminatorExampleForNumbers.class,
+        mathOperations = (MathOperations)new DiscriminatorConfiguration<Number, MathOperations>().discriminateDefault(
+                Number.class, MathOperations.class,
                 IntegerMathOperations.class, LongMathOperations.class);
     }
 
     @Test
     public void testInit() {
-        DiscriminatorConfiguration d = new DiscriminatorConfiguration<MathOperations>();
-        d.discriminate();
-        d.discriminate(1, 2);
+        DiscriminatorConfiguration d = new DiscriminatorConfiguration<Number, MathOperations>();
     }
 
     @Test(expected = RuntimeException.class)

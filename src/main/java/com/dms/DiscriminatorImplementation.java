@@ -13,8 +13,15 @@ import java.util.Collection;
  * @param <DiscriminatorType> the wrapper type to discriminate on
  * @param <InterfaceType>     the interface for all implementations
  */
-public abstract class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
+public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
         extends DiscriminatorInitializer<DiscriminatorType, InterfaceType> {
+
+    public DiscriminatorImplementation(Class discriminatorClass, Class interfaceClass) {
+        super(discriminatorClass, interfaceClass);
+    }
+
+    public DiscriminatorImplementation() {
+    }
 
     /**
      * The aspect around all methods for common interface of all implementations.
@@ -165,4 +172,14 @@ public abstract class DiscriminatorImplementation<DiscriminatorType, InterfaceTy
         return joinPointClass.isAssignableFrom(targetClass) || targetClass.isAssignableFrom(joinPointClass);
     }
 
+    @Override
+    public InterfaceType getImplementationForDiscriminator(DiscriminatorType parameter) {
+        Collection<InterfaceType> implementationTypes = getImplementations().values();
+        for (InterfaceType implementation:implementationTypes) {
+            if (getTypeArgumentForImplementationClass(implementation.getClass(), 0).equals(parameter.getClass())) {
+                return implementation;
+            }
+        }
+        throw new IllegalStateException("No implementation found for parameter.");
+    }
 }
