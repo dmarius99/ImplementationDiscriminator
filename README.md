@@ -8,27 +8,25 @@ The Discriminator annotation can specify if the methods that return Collections 
 The discriminator value should be implemented in a separate bean that implements DiscriminatorImplementation.
 Example:
 
-MathOperations mathOperations = (MathOperations)new DiscriminatorConfiguration<Number, MathOperations>()
-        .discriminateDefault(Number.class, MathOperations.class,
-        IntegerMathOperations.class, LongMathOperations.class);
-
-@Discriminator
-public class IntegerMathOperations implements MathOperations<Integer> {
-
-    @Override
-    public Integer plus(Integer number1, Integer number2) {
-        return number1+number2;
-    }
-}
-
-@Discriminator
-public class LongMathOperations implements MathOperations<Long> {
-
-    @Override
-    public Long plus(Long number1, Long number2) {
-        return number1+number2;
-    }
-}
+        MathOperations mathOperations = (MathOperations)new DiscriminatorConfiguration<Number, MathOperations>()
+          .discriminateDefault(Number.class, MathOperations.class,
+                IntegerMathOperations.class, LongMathOperations.class);
+        
+        @Discriminator
+        public class IntegerMathOperations implements MathOperations<Integer> {
+            @Override
+            public Integer plus(Integer number1, Integer number2) {
+                return number1+number2;
+            }
+        }
+        
+        @Discriminator
+        public class LongMathOperations implements MathOperations<Long> {
+            @Override
+            public Long plus(Long number1, Long number2) {
+                return number1+number2;
+            }
+        }
 
 In order to specify which of the implementations to be used the method
 getImplementations(String classNameAsMapKey) will be used.
