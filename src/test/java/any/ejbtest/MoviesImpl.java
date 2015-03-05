@@ -18,16 +18,15 @@ package any.ejbtest;
 
 //START SNIPPET: code
 
-import com.dms.Discriminator;
-
 import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 
 @Stateless(name = "MoviesImpl")
-@Discriminator(isResultAggregated = true)
+//@Discriminator(isResultAggregated = true)
 //@Interceptors(SpringBeanAutowiringInterceptor.class)
 //@Named
+//@Interceptors(DiscriminatorInterceptor.class)
 public class MoviesImpl implements Movies {
 
     private List<Movie> entityManager = new ArrayList<>();
@@ -40,7 +39,7 @@ public class MoviesImpl implements Movies {
         entityManager.remove(movie);
     }
 
-    public List<Movie> getMovies() throws Exception {
+    public List<Movie> getAllMovies() throws Exception {
         return entityManager;
     }
 

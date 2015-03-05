@@ -10,17 +10,21 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 
     <context:annotation-config/>
     <context:component-scan base-package="com.dms,any.ejbtest"/>
-    <!--<jee:jndi-lookup id="Movies" jndi-name="any.ejbtest.MoviesImpl" />-->
-    <!--<jee:jndi-lookup id="MoviesLegacy" jndi-name="any.ejbtest.MoviesImplLegacy" />-->
 
-    <!--<bean id="MoviesImpl" class="any.ejbtest.MoviesImpl">-->
-        <!--<property name="customerService" ref="customerService" />-->
-    <!--</bean>-->
+
     <bean id="moviesImpl" class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiName"><value>MoviesImplLocal</value></property>
     </bean>
     <bean id="moviesImplLegacy" class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiName"><value>MoviesImplLegacyLocal</value></property>
+    </bean>
+
+
+    <bean id="moviesImplWrapper" class="any.ejbtest.MoviesImplWrapper">
+        <property name="movies" ref="moviesImpl"/>
+    </bean>
+    <bean id="moviesImplLegacyWrapper" class="any.ejbtest.MoviesImplLegacyWrapper">
+        <property name="movies" ref="moviesImplLegacy"/>
     </bean>
 
 </beans>

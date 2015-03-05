@@ -1,7 +1,5 @@
 package any.ejbtest;
 
-import com.dms.Discriminator;
-
 import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +13,10 @@ import java.util.List;
  * @version $Id$
  */
 @Stateless(name = "MoviesImplLegacy")
-@Discriminator
+//@Discriminator
 //@Interceptors(SpringBeanAutowiringInterceptor.class)
 //@Named
+//@Interceptors(DiscriminatorInterceptor.class)
 public class MoviesImplLegacy implements Movies {
 
     private List<Movie> entityManager = new ArrayList<>();
@@ -30,7 +29,7 @@ public class MoviesImplLegacy implements Movies {
         entityManager.remove(movie);
     }
 
-    public List<Movie> getMovies() throws Exception {
+    public List<Movie> getAllMovies() throws Exception {
         return entityManager;
     }
 

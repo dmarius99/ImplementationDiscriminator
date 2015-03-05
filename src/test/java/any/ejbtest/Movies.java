@@ -27,5 +27,6 @@ public interface Movies {
 
     void deleteMovie(Movie movie) throws Exception;
 
-    List<Movie> getMovies() throws Exception;
+    List<Movie> getAllMovies() throws Exception;
+
 }
