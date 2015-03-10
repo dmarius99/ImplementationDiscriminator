@@ -1,7 +1,9 @@
 # ImplementationDiscriminator
 -------
+[![Build Status](https://travis-ci.org/dmarius99/ImplementationDiscriminator.svg?branch=master)](https://travis-ci
+.org/dmarius99/ImplementationDiscriminator)
 
-# Description/Definition
+## Description/Definition
 -------
 A java solution for multiple inheritance or multiple implementations management using discrimination of types.
 Manages in run-time multiple implementations based on a interface and a discriminator parameter.
@@ -19,7 +21,7 @@ Wanted:
 				implements MathOperations<Number> {
 		}
 
-but got :)
+but unfortunately multiple inheritance is not available in java. So, I got :)
 
         MathOperations mathOperations = (MathOperations)DiscriminatorConfiguration.discriminateDefault(
                         Number.class, MathOperations.class,
@@ -43,8 +45,16 @@ Here are 2 MathOperations implementations as example:
             }
         }
 
-# Overriding default mechanism
--------
+## Features
+
+* is a particular case of multiple inheritance
+* is a default type dispatcher with annotations in runtime
+* validates the usage of it (validates the @Discriminator annotation)
+* works in java 7/8 applications
+* very little overhead (less than 1 ms/call)
+* works in synchronous programming and asynchronous programming
+
+## Overriding default mechanism
 
 The default parameter type discrimination can be overridden by overriding the getImplementationForDiscriminator method
 from class DiscriminatorImplementation.
@@ -59,7 +69,8 @@ If several implementations have the annotation attribute "isResultAggregated" th
 used between the boolean values.
 
 Second usage might be more intuitive for some: add the com.dms package import in context.xml:
-	<context:component-scan base-package="com.dms"/>
+
+		<context:component-scan base-package="com.dms"/>
 
 Within the code nothing changes as long as you inject the interface and specify the default implementation
 using the injected Spring bean:
