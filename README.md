@@ -1,7 +1,5 @@
 # ImplementationDiscriminator
 -------
-[![Build Status](https://travis-ci.org/dmarius99/ImplementationDiscriminator.svg?branch=master)](https://travis-ci
-.org/dmarius99/ImplementationDiscriminator)
 
 ## Description/Definition
 -------
