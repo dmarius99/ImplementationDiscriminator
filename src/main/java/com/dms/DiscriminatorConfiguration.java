@@ -37,6 +37,9 @@ public class DiscriminatorConfiguration<DiscriminatorType, InterfaceType> {
     private static Class discriminatorType;
     private static Class interfaceType;
 
+    public DiscriminatorConfiguration() {
+    }
+
     /**
      * Activates the @Discriminator for several implementations.
      *
@@ -61,8 +64,20 @@ public class DiscriminatorConfiguration<DiscriminatorType, InterfaceType> {
         return applicationContext.getBean(beanName);
     }
 
-    public Object discriminateDefault(final Class myDiscriminatorType,
-                                      final Class myInterfaceType,
+    public static Object discriminateDefault(final Class myDiscriminatorType,
+                                             final Class myInterfaceType,
+                                             final Class myDefaultImplementation,
+                                             final Class... myImplementations) {
+        DiscriminatorConfiguration discriminatorConfiguration = new DiscriminatorConfiguration();
+        return discriminatorConfiguration.discriminateDefaultPrivate(
+                myDiscriminatorType,
+                myInterfaceType,
+                myDefaultImplementation,
+                myImplementations);
+    }
+
+    private Object discriminateDefaultPrivate(final Class myDiscriminatorType,
+                                      final Class<InterfaceType> myInterfaceType,
                                       final Class myDefaultImplementation,
                                       final Class... myImplementations) {
         this.discriminatorType = myDiscriminatorType;
@@ -117,8 +132,8 @@ public class DiscriminatorConfiguration<DiscriminatorType, InterfaceType> {
 
     private static void initDiscriminatorInterface() {
         BeanDefinition myBeanDefinition = getMyBeanDefinition(discriminatorClass);
-        myBeanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(0, discriminatorType);
-        myBeanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(1, interfaceType);
+        myBeanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(0, discriminatorType, Class.class.getName());
+        myBeanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(1, interfaceType, Class.class.getName());
         registerMyBean(myBeanDefinition, Introspector.decapitalize(DiscriminatorInterface.class.getSimpleName()));
     }
 
