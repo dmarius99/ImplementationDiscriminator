@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DiscriminatorInitializerTest {
+public class DiscriminatedInitializerTest {
 
     private DiscriminatorInitializer discriminatorInitializer;
     private DiscriminatorInitializer mockDiscriminator;

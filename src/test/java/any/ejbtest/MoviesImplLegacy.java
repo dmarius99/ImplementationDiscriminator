@@ -13,7 +13,7 @@ import java.util.List;
  * @version $Id$
  */
 @Stateless(name = "MoviesImplLegacy")
-//@Discriminator
+//@Discriminated
 //@Interceptors(SpringBeanAutowiringInterceptor.class)
 //@Named
 //@Interceptors(DiscriminatorInterceptor.class)

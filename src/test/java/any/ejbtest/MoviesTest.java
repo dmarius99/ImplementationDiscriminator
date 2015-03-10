@@ -90,7 +90,7 @@ public class MoviesTest {
                 MoviesImplWrapper.class, MoviesImplLegacyWrapper.class);
 
 
-        //get any spring bean annotated with @Discriminator or default bean
+        //get any spring bean annotated with @Discriminated or default bean
         Movies moviesBean = moviesDiscriminatedInSpring;
         //(Movies) applicationContext.getBean("moviesImplWrapper");
 

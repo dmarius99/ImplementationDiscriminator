@@ -19,7 +19,7 @@ interface DiscriminatorInterface<DiscriminatorType, InterfaceType>
     /**
      * The annotation full name.
      */
-    String ANNOTATION_NAME = "@Discriminator";
+    String ANNOTATION_NAME = "@Discriminated";
 
     /**
      * The method name in the annotation for setting the aggregation flag.

@@ -8,9 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Discriminator, 17.10.2014
+ * Discriminated, 17.10.2014
  *
- * Identifies implementations that can be managed dynamically using a discriminator parameter.
+ * Identifies implementations that can be managed dynamically using a discriminated parameter.
  *
  * Copyright marius.dinu@gmail.com. All rights reserved.
  */
@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface Discriminator {
+public @interface Discriminated {
 
     /**
      * @return true if methods that return Collection should be aggregated/combined, false otherwise.

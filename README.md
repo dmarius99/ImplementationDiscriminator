@@ -9,9 +9,9 @@ A java solution for multiple inheritance or multiple implementations management 
 Manages in run-time multiple implementations based on a interface and a discriminator parameter.
 It is a annotation to be used in Java applications.
 Is used to specify the value of the Discriminator method parameter for implementations of the given interface.
-The Discriminator annotation can only be specified on concrete classes having the same interface.
-The Discriminator annotation can specify if the methods that return Collections should be aggregated or not.
-The discriminator value should be implemented in a separate bean that implements DiscriminatorImplementation.
+The Discriminated annotation can only be specified on concrete classes having the same interface.
+The Discriminated annotation can specify if the methods that return Collections should be aggregated or not.
+The discriminated value should be implemented in a separate bean that implements DiscriminatorImplementation.
 Example:
 
 Wanted:
@@ -29,7 +29,7 @@ but unfortunately multiple inheritance is not available in java. So, I got :)
 
 Here are 2 MathOperations implementations as example:
 
-        @Discriminator
+        @Discriminated
         public class IntegerMathOperations implements MathOperations<Integer> {
             @Override
             public Integer plus(Integer number1, Integer number2) {
@@ -37,7 +37,7 @@ Here are 2 MathOperations implementations as example:
             }
         }
 
-        @Discriminator
+        @Discriminated
         public class LongMathOperations implements MathOperations<Long> {
             @Override
             public Long plus(Long number1, Long number2) {
@@ -45,11 +45,15 @@ Here are 2 MathOperations implementations as example:
             }
         }
 
+		public interface MathOperations<T extends Number> {
+    		T plus(T number1, T number2);
+		}
+
 ## Features
 
 * is a particular case of multiple inheritance
 * is a default type dispatcher with annotations in runtime
-* validates the usage of it (validates the @Discriminator annotation)
+* validates the usage of it (validates the @Discriminated annotation)
 * works in java 7/8 applications
 * very little overhead (less than 1 ms/call)
 * works in synchronous programming and asynchronous programming
@@ -64,7 +68,7 @@ The method getImplementations contains a map of all the implementations found fo
 The key map will be the implementation class name. All the implementations present in the map verify these assumptions:
  - the implementation is defined as a Spring bean
  - the implementation implements the interface defined as a typed parameter
- - the implementation has the @Discriminator annotation
+ - the implementation has the @Discriminated annotation
 If several implementations have the annotation attribute "isResultAggregated" than the logical operator "OR" will be
 used between the boolean values.
 
@@ -79,5 +83,5 @@ using the injected Spring bean:
 	    @Named(value = "integerMathOperations")
     	private MathOperations mathOperations;
 
-The above interface will be intercepted and will apply the @Discriminator on multiple implementations.
+The above interface will be intercepted and will apply the @Discriminated on multiple implementations.
 

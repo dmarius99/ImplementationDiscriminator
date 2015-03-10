@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Stateless(name = "MoviesImpl")
-//@Discriminator(isResultAggregated = true)
+//@Discriminated(isResultAggregated = true)
 //@Interceptors(SpringBeanAutowiringInterceptor.class)
 //@Named
 //@Interceptors(DiscriminatorInterceptor.class)

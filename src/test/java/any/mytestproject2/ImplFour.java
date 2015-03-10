@@ -1,7 +1,7 @@
 package any.mytestproject2;
 
 import any.CommonInterface;
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 import any.WrappedParam;
 
 import javax.inject.Named;
@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by Marius on 27/09/14.
  */
 @Named
-@Discriminator
+@Discriminated
 public class ImplFour implements CommonInterface {
 
     public static final String MSG = "Show message from ImplFour... 444";

@@ -1,6 +1,6 @@
 package any.ejbtest;
 
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * @version $Id$
  */
 //@Named
-@Discriminator
+@Discriminated
 public class MoviesImplLegacyWrapper implements Movies {
 
     private Movies movies;

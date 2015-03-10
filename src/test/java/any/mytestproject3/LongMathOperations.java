@@ -1,6 +1,6 @@
 package any.mytestproject3;
 
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 
 import javax.inject.Named;
 
@@ -8,7 +8,7 @@ import javax.inject.Named;
  * Created by Marius Dinu (marius.dinu@gmail.com) on 23/12/14.
  */
 @Named
-@Discriminator(isResultAggregated = true)
+@Discriminated(isResultAggregated = true)
 public class LongMathOperations implements MathOperations<Long> {
 
     public LongMathOperations() {

@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 25/12/14.
  */
-public class DiscriminatorImplementationTest {
+public class DiscriminatedImplementationTest {
 
     @Test
     public void testDefaultIntercept() throws Throwable {

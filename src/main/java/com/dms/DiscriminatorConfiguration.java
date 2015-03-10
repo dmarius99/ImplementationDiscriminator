@@ -41,7 +41,7 @@ public class DiscriminatorConfiguration<DiscriminatorType, InterfaceType> {
     }
 
     /**
-     * Activates the @Discriminator for several implementations.
+     * Activates the @Discriminated for several implementations.
      *
      * @param myDiscriminatorClass the discriminator class
      * @param myDefaultImplementation the default implementation

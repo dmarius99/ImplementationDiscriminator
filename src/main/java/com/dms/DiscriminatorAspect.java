@@ -39,11 +39,11 @@ class DiscriminatorAspect {
     }
 
     /**
-     * This is Spring style Pointcut: @target(com.dms.Discriminator).
+     * This is Spring style Pointcut: @target(com.dms.Discriminated).
      * The other choice would have been using AspectJ style Pointcut:
-     *     execution(@com.dms.Discriminator * *(..))
+     *     execution(@com.dms.Discriminated * *(..))
      */
-    @Pointcut("@target(com.dms.Discriminator)")
+    @Pointcut("@target(com.dms.Discriminated)")
     public void getBeansAnnotatedWithDiscriminator() {
     }
 

@@ -1,6 +1,6 @@
 package any.mytestproject3;
 
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 
 import javax.inject.Named;
 
@@ -13,7 +13,7 @@ import javax.inject.Named;
  * @version $Id$
  */
 @Named
-@Discriminator
+@Discriminated
 public class IntegerMathOperations implements MathOperations<Integer> {
 
     @Override

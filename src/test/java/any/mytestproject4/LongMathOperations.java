@@ -1,11 +1,11 @@
 package any.mytestproject4;
 
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 23/12/14.
  */
-@Discriminator(isResultAggregated = true)
+@Discriminated(isResultAggregated = true)
 public class LongMathOperations implements MathOperations<Long> {
 
     public LongMathOperations() {

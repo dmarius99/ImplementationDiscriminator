@@ -47,7 +47,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     private boolean resultAggregated = false;
 
     /**
-     * All implementations with @Discriminator annotation that implements InterfaceType.
+     * All implementations with @Discriminated annotation that implements InterfaceType.
      */
     private SortedMap<String, InterfaceType> implementations;
 
@@ -105,7 +105,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
         ClassPathScanningCandidateComponentProvider scanner =
                 new ClassPathScanningCandidateComponentProvider(false);
         scanner.setResourceLoader(new PathMatchingResourcePatternResolver(CLASS_LOADER));
-        scanner.addIncludeFilter(new AnnotationTypeFilter(Discriminator.class));
+        scanner.addIncludeFilter(new AnnotationTypeFilter(Discriminated.class));
         scanner.addExcludeFilter(new AspectJTypeFilter(DiscriminatorAspect.class.getName(), CLASS_LOADER));
         scanner.addExcludeFilter(new AssignableTypeFilter(DiscriminatorAspect.class));
         scanner.addExcludeFilter(new AssignableTypeFilter(DiscriminatorImplementation.class));
@@ -115,7 +115,7 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
     }
 
     private Boolean getIsResultAggregated(final BeanDefinition beanDefinition) {
-        return getAnnotationAttribute(beanDefinition, Discriminator.class, DiscriminatorInterface.IS_RESULT_AGGREGATED);
+        return getAnnotationAttribute(beanDefinition, Discriminated.class, DiscriminatorInterface.IS_RESULT_AGGREGATED);
     }
 
     private Boolean getAnnotationAttribute(final BeanDefinition beanDefinition,

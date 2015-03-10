@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class DiscriminatorAspectTest {
+public class DiscriminatedAspectTest {
 
     @Test(expected = NullPointerException.class)
     public void testInterceptThrowsNullPointerException() throws Throwable {

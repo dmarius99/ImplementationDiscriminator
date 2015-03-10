@@ -1,13 +1,13 @@
 package any.mytestproject4;
 
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Marius Dinu (marius.dinu@gmail.com) on 01/03/15.
  */
-@Discriminator
+@Discriminated
 public class AtomicIntegerMathOperations implements MathOperations<AtomicInteger>{
 
     @Override

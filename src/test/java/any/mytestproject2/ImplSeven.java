@@ -2,7 +2,7 @@ package any.mytestproject2;
 
 import any.CommonInterface;
 import any.WrappedParam;
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 
 import javax.inject.Named;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.Set;
  * @version $Id$
  */
 @Named
-@Discriminator
+@Discriminated
 public class ImplSeven implements CommonInterface {
 
     @Override

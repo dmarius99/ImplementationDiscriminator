@@ -1,6 +1,6 @@
 package any.mytestproject4;
 
-import com.dms.Discriminator;
+import com.dms.Discriminated;
 
 /**
  * IntegerMathOperations, 04.02.2015
@@ -10,7 +10,7 @@ import com.dms.Discriminator;
  * @author mdinu
  * @version $Id$
  */
-@Discriminator
+@Discriminated
 public class IntegerMathOperations implements MathOperations<Integer> {
 
     @Override
