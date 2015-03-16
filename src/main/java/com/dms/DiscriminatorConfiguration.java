@@ -76,6 +76,28 @@ public class DiscriminatorConfiguration<DiscriminatorType, InterfaceType> {
                 myImplementations);
     }
 
+    public static Object discriminateDefaultWithoutSpring(final Class myDiscriminatorType,
+                                             final Class myInterfaceType,
+                                             final Class myDefaultImplementation,
+                                             final Class... myImplementations) {
+        //DiscriminatorConfiguration discriminatorConfiguration = new DiscriminatorConfiguration();
+        discriminatorType = myDiscriminatorType;
+        interfaceType = myInterfaceType;
+
+        DiscriminatorImplementation discriminatorImplementation = new DiscriminatorImplementation(
+                discriminatorType,
+                interfaceType
+        );
+        discriminatorClass = discriminatorImplementation.getClass();
+        defaultImplementation = myDefaultImplementation;
+        implementations = myImplementations;
+        for (Class impl:implementations) {
+            Object implObj = DiscriminatedProxy.createDiscriminatedProxy(impl);
+
+        }
+        return DiscriminatedProxy.createDiscriminatedProxy(myInterfaceType);
+    }
+
     private Object discriminateDefaultPrivate(final Class myDiscriminatorType,
                                       final Class<InterfaceType> myInterfaceType,
                                       final Class myDefaultImplementation,

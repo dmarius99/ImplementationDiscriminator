@@ -56,8 +56,7 @@ class DiscriminatorAspect {
      */
     @Around("getBeansAnnotatedWithDiscriminator()")
     public Object intercept(final ProceedingJoinPoint joinPoint) throws Throwable {
-        discriminatorInterface.activate();
-        return discriminatorInterface.defaultIntercept(joinPoint);
+        return discriminatorInterface.defaultIntercept(new Execution(joinPoint));
     }
 
 }

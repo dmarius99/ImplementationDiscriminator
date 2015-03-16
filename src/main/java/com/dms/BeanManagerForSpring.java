@@ -51,6 +51,9 @@ class BeanManagerForSpring<InterfaceType> implements BeanManager {
      */
     private SortedMap<String, InterfaceType> implementations;
 
+    protected BeanManagerForSpring() {
+    }
+
     @PostConstruct
     void init() {
         implementations = Collections.unmodifiableSortedMap(getDependencies());

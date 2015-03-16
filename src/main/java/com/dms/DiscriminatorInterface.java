@@ -1,7 +1,5 @@
 package com.dms;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-
 /**
  * DiscriminatorInterface, 23.10.2014
  *
@@ -41,7 +39,7 @@ interface DiscriminatorInterface<DiscriminatorType, InterfaceType>
      * @return the return object
      * @throws Throwable if exception occurs
      */
-    Object defaultIntercept(ProceedingJoinPoint joinPoint) throws Throwable;
+    Object defaultIntercept(Execution execution) throws Throwable;
 
     /**
      *

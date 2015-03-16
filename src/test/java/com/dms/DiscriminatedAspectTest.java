@@ -11,6 +11,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -28,7 +29,7 @@ public class DiscriminatedAspectTest {
         DiscriminatorAspect discriminatorAspect = new DiscriminatorAspect(discriminatorInterface);
         ProceedingJoinPoint joinPoint = mock(MethodInvocationProceedingJoinPoint.class);
         discriminatorAspect.intercept(joinPoint);
-        verify(discriminatorInterface).defaultIntercept(joinPoint);
+        verify(discriminatorInterface).defaultIntercept(any(Execution.class));
     }
 
     @Test

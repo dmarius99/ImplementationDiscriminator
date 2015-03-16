@@ -1,9 +1,5 @@
 package com.dms;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
-
 import java.lang.reflect.Method;
 import java.util.Collection;
 
@@ -30,11 +26,13 @@ public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
      * @return the return type
      * @throws Throwable if any exception appears
      */
-    public final Object defaultIntercept(final ProceedingJoinPoint joinPoint) throws Throwable {
+    public final Object defaultIntercept(final Execution execution) throws Throwable {
+        //TODO
+        activate();
         if (isActive()) {
-            return discriminateExecutionPoint(joinPoint);
+            return discriminateExecutionPoint(execution);
         } else {
-            return joinPoint.proceed();
+            return execution.proceed();
         }
     }
 
@@ -47,27 +45,27 @@ public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
      * @return the return type
      * @throws Throwable if any exception appears
      */
-    private Object discriminateExecutionPoint(final ProceedingJoinPoint joinPoint) throws Throwable {
-        if (methodShouldNotBeIntercepted(getMethod(joinPoint))) {
-            return joinPoint.proceed();
+    private Object discriminateExecutionPoint(final Execution execution) throws Throwable {
+        if (methodShouldNotBeIntercepted(execution.getMethodAsString())) {
+            return execution.proceed();
         } else {
             //this is the case when method should be intercepted
             if (isResultAggregated()) {
-                if (methodShouldBeAggregated(getMethod(joinPoint))) {
-                    return aggregateLists(joinPoint);
+                if (methodShouldBeAggregated(execution.getMethodAsString())) {
+                    return aggregateLists(execution);
                 } else {
-                    return returnResultObject(joinPoint);
+                    return returnResultObject(execution);
                 }
             } else {
-                return returnResultObject(joinPoint);
+                return returnResultObject(execution);
             }
         }
     }
 
-    private Object returnResultObject(final ProceedingJoinPoint joinPoint) throws Throwable {
-        DiscriminatorType discriminatorParameter = getDiscriminatorParameter(joinPoint);
+    private Object returnResultObject(final Execution execution) throws Throwable {
+        DiscriminatorType discriminatorParameter = getDiscriminatorParameter(execution);
         if (discriminatorParameter == null) {
-            return joinPoint.proceed();
+            return execution.proceed();
         }
         InterfaceType implementationLayer = getImplementationForDiscriminator(discriminatorParameter);
 
@@ -75,15 +73,7 @@ public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
             throwError(new IllegalStateException());
         }
 
-        return runOnImplementation(implementationLayer, joinPoint);
-    }
-
-    /**
-     * @param joinPoint ProceedingJoinPoint
-     * @return method name
-     */
-    private String getMethod(final ProceedingJoinPoint joinPoint) {
-        return joinPoint.getSignature().getName();
+        return runOnImplementation(implementationLayer, execution);
     }
 
     /**
@@ -106,8 +96,8 @@ public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
      * @param joinPoint ProceedingJoinPoint
      * @return DiscriminatorType discriminator object parameter
      */
-    private DiscriminatorType getDiscriminatorParameter(final ProceedingJoinPoint joinPoint) {
-        for (Object o : joinPoint.getArgs()) {
+    private DiscriminatorType getDiscriminatorParameter(final Execution execution) {
+        for (Object o : execution.getArgs()) {
             if (getDiscriminatorClass().isAssignableFrom(o.getClass())) {
                 return (DiscriminatorType) o;
             }
@@ -120,14 +110,14 @@ public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
      * @param joinPoint           ProceedingJoinPoint
      * @return the return object
      */
-    private Object runOnImplementation(final InterfaceType implementationLayer, final ProceedingJoinPoint joinPoint) {
-        Method method = getMethodFromJoinPoint(joinPoint);
-        Object[] args = joinPoint.getArgs();
+    private Object runOnImplementation(final InterfaceType implementationLayer, final Execution execution) {
+        Method method = execution.getMethodFromJoinPoint();
+        Object[] args = execution.getArgs();
         try {
             //if the thread is from the implementationLayer then proceed
             //otherwise it will run into cyclic issues
-            if (isImplementationLayerJoinPointImplementation(implementationLayer, joinPoint)) {
-                return joinPoint.proceed();
+            if (isImplementationLayerJoinPointImplementation(implementationLayer, execution)) {
+                return execution.proceed();
             }
             //if implementationLayer is the desired path return it's result
             return method.invoke(implementationLayer, args);
@@ -144,11 +134,11 @@ public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
      * @return the return method object
      * @throws Throwable if RuntimeExceptions occurs
      */
-    private Object aggregateLists(final ProceedingJoinPoint joinPoint) throws Throwable {
-        Collection defaultList = (Collection) joinPoint.proceed();
+    private Object aggregateLists(final Execution execution) throws Throwable {
+        Collection defaultList = (Collection) execution.proceed();
 
         for (InterfaceType serviceLayer : getImplementations().values()) {
-            Object list = runOnImplementation(serviceLayer, joinPoint);
+            Object list = runOnImplementation(serviceLayer, execution);
             if (isCollectionNotEmpty(list)) {
                 defaultList.addAll((Collection) list);
             }
@@ -160,15 +150,10 @@ public class DiscriminatorImplementation<DiscriminatorType, InterfaceType>
         return list != null && list instanceof Collection && ((Collection) list).size() > 0;
     }
 
-    private Method getMethodFromJoinPoint(final JoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        return signature.getMethod();
-    }
-
     private boolean isImplementationLayerJoinPointImplementation(final InterfaceType implementationLayer,
-                                                                 final ProceedingJoinPoint joinPoint) {
+                                                                 final Execution execution) {
         Class targetClass = implementationLayer.getClass();
-        Class joinPointClass = joinPoint.getSourceLocation().getWithinType();
+        Class joinPointClass = execution.getSourceClass();
         return joinPointClass.isAssignableFrom(targetClass) || targetClass.isAssignableFrom(joinPointClass);
     }
 

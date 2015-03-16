@@ -33,14 +33,14 @@ public class DiscriminatedImplementationTest {
         when(beanManagerForSpring.isResultAggregated()).thenReturn(true);
         assertTrue(((DiscriminatorInitializer)discriminatorImplementation).isResultAggregated());
 
-        Object result1 = discriminatorImplementation.defaultIntercept(proceedingJoinPoint);
+        Object result1 = discriminatorImplementation.defaultIntercept(new Execution(proceedingJoinPoint));
         verify(proceedingJoinPoint).proceed();
 
         Method method = DiscriminatorImplementation.class.getDeclaredMethod(
                 DiscriminatorInterface.DISCRIMINATE_EXECUTION_POINT,
-                ProceedingJoinPoint.class);
+                Execution.class);
         method.setAccessible(true);
-        Object result2 = method.invoke(discriminatorImplementation, proceedingJoinPoint);
+        Object result2 = method.invoke(discriminatorImplementation, new Execution(proceedingJoinPoint));
         verify(proceedingJoinPoint, new Times(2)).proceed();
         assertEquals(result1, result2);
     }

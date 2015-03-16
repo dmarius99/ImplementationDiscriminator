@@ -81,5 +81,27 @@ using the injected Spring bean:
 	    @Named(value = "integerMathOperations")
     	private MathOperations mathOperations;
 
+		Named
+		public class DiscriminatorExampleForNumbers extends DiscriminatorImplementation<Number, MathOperations> {
+
+			@Override
+			public MathOperations getImplementationForDiscriminator(Number parameter) {
+				if (parameter.longValue() < Integer.MAX_VALUE) {
+					return getImplementations().get(IntegerMathOperations.class.getName());
+				} else {
+					if (parameter.longValue() > Integer.MAX_VALUE) {
+						return getImplementations().get(LongMathOperations.class.getName());
+					} else {
+						return null;
+					}
+				}
+			}
+
+		}
 The above interface will be intercepted and will apply the @Discriminated on multiple implementations.
 
+An example of using 3 implementations with default type discrimination:
+
+		MathOperations mathOperations = (MathOperations)DiscriminatorConfiguration.discriminateDefault(
+                Number.class, MathOperations.class,
+                IntegerMathOperations.class, LongMathOperations.class, AtomicIntegerMathOperations.class);
