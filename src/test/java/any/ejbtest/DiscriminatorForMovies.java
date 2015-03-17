@@ -7,7 +7,7 @@ import javax.inject.Named;
 /**
  * DiscriminatorForMovies, 26.02.2015
  *
- * Copyright (c) 2014 1&1 Internet AG. All rights reserved.
+ * Copyright (c) 2014 Marius Dinu. All rights reserved.
  *
  * @author mdinu
  * @version $Id$

@@ -7,7 +7,7 @@ import java.util.TreeMap;
 /**
  * BeanManagerDefault, 11.03.2015
  *
- * Copyright (c) 2014 1&1 Internet AG. All rights reserved.
+ * Copyright (c) 2014 All rights reserved.
  *
  * @author mdinu
  * @version $Id$
