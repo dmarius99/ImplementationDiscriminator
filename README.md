@@ -1,4 +1,4 @@
-# ImplementationDiscriminator
+# ImplementationDiscriminator  <img src="https://travis-ci.org/dmarius99/ImplementationDiscriminator.svg?branch=master">
 -------
 
 ## Description/Definition
