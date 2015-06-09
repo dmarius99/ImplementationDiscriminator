@@ -35,7 +35,7 @@
     <developers>
         <developer>
             <id>dmarius99</id>
-            <name>Dinu Marius</name>
+            <name>Marius Dinu</name>
             <email>marius.dinu@gmail.com</email>
             <timezone>+2</timezone>
         </developer>
@@ -47,21 +47,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Production dependency versions -->
-        <spring.version>3.2.1.RELEASE</spring.version>
-
+		<spring.version>4.1.6.RELEASE</spring.version>
         <!-- Testing dependency versions -->
-        <junit.version>4.8.1</junit.version>
+        <junit.version>4.9</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <aspectj.version>1.8.2</aspectj.version>
         <java.source-target.version>1.7</java.source-target.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
+		<dependency>
+        	<groupId>org.springframework</groupId>
+        	<artifactId>spring-context</artifactId>
+        	<version>${spring.version}</version>
+		</dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
@@ -71,6 +70,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
         </dependency>
 
         <!-- Test dependencies -->
